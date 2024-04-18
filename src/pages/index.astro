@@ -1,0 +1,82 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Image from "../components/Image.astro";
+import { config } from "../config";
+import images from "../images.json";
+---
+
+<Layout title={config.title}>
+  <header id="masthead">
+    <h1>{config.title}</h1>
+    <p>{config.bio}</p>
+    <p>{config.description}</p>
+  </header>
+
+  {
+    images.map(
+      (
+        {
+          backgroundColor,
+          caption,
+          color,
+          height,
+          id,
+          mobileUrl,
+          tabletUrl,
+          url,
+          width,
+        },
+        index
+      ) => {
+        return (
+          <Image
+            backgroundColor={backgroundColor}
+            caption={caption}
+            color={color}
+            height={height}
+            id={id}
+            loading={index < 3 ? "eager" : "lazy"}
+            mobileUrl={mobileUrl}
+            src={url}
+            tabletUrl={tabletUrl}
+            width={width}
+          />
+        );
+      }
+    )
+  }
+</Layout>
+
+<style>
+  body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (width <= 75rem) {
+    body {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  header {
+    display: grid;
+    gap: calc(var(--gap) * 0.5);
+    padding: var(--gap);
+    align-content: start;
+
+    > * {
+      font-size: 1rem;
+      font-weight: normal;
+      margin: 0;
+      text-transform: uppercase;
+      user-select: text;
+    }
+  }
+
+  @media (width <= 75rem) {
+    header {
+      min-height: 30vh;
+    }
+  }
+</style>

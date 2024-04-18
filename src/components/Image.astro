@@ -1,0 +1,109 @@
+---
+interface Props {
+  backgroundColor: string;
+  caption?: string;
+  color: string;
+  height: number;
+  id: string;
+  loading: HTMLImageElement["loading"];
+  mobileUrl: string;
+  src: string;
+  tabletUrl: string;
+  width: number;
+}
+const {
+  backgroundColor,
+  caption,
+  color,
+  height,
+  id,
+  loading,
+  mobileUrl,
+  src,
+  tabletUrl,
+  width,
+} = Astro.props;
+---
+
+<section id={id} style={`background-color: ${backgroundColor}`}>
+  <a href={`#${id}`}>
+    <figure>
+      <img
+        src={src}
+        loading={loading}
+        height={~~(height * 0.5)}
+        width={~~(width * 0.5)}
+        srcset={`${mobileUrl} 480w, ${tabletUrl} 768w, ${src} 1500w`}
+        sizes="(max-width: 480px) 600px, (max-width: 768px) 1024px, 1500px"
+      />
+      {caption ? <figcaption class={color}>{caption}</figcaption> : null}
+    </figure>
+  </a>
+</section>
+
+<style>
+  section {
+    height: 100vh;
+    padding: var(--gap);
+    text-transform: uppercase;
+    scroll-snap-align: start;
+  }
+
+  @media (width <= 75rem) {
+    section {
+      height: auto;
+      padding: calc(var(--gap) * 0.5);
+      padding-block-end: calc(var(--gap) * 4);
+      scroll-snap-align: unset;
+    }
+  }
+
+  section a {
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  figure {
+    margin: 0;
+    display: grid;
+    gap: calc(var(--gap) * 0.75);
+  }
+
+  img {
+    display: block;
+    height: auto;
+    max-height: min(calc(50vw - var(--gap) * 2), calc(100vh - var(--gap) * 4));
+    max-width: min(calc(50vw - var(--gap) * 2), calc(100vh - var(--gap) * 4));
+    width: auto;
+  }
+
+  @media (width <= 75rem) {
+    img {
+      max-width: calc(100vw - var(--gap));
+      max-height: calc(100vw - var(--gap));
+    }
+  }
+
+  figcaption {
+    color: var(--white-caption);
+    margin: 0;
+    padding-inline: calc(var(--gap) * 0.125);
+    text-align: end;
+    user-select: text;
+    font-size: 0.8rem;
+
+    &.black {
+      color: var(--black-caption);
+    }
+
+    &.white {
+      color: var(--white-caption);
+    }
+  }
+
+  @media (width <= 75rem) {
+    figcaption {
+      font-size: max(0.5rem, 1vw);
+    }
+  }
+</style>
