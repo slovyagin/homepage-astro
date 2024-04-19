@@ -120,7 +120,7 @@ function invertColor(hex: string) {
 }
 ---
 
-<script>
+<script is:inline>
   document.querySelectorAll("section a").forEach((link, index) => {
     link?.addEventListener("click", (event) => {
       event.preventDefault();
