@@ -37,34 +37,33 @@ for await (const item of resources) {
     quality: "auto",
     width: BASELINE_SIZE,
   });
-  const cloudflareUrl = url.replace(
-    "https://res.cloudinary.com/slovyagin/image/upload/",
-    "https://images.slovyagin.com/upload/"
-  );
+  const proxiedUrl = url
+    .replace(
+      `https://res.cloudinary.com/${import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`,
+      "https://images.slovyagin.com/upload/"
+    )
+    .replace(",q_auto", ",q_auto,f_auto");
 
   const color = res.colors[3][0].toLowerCase();
   const image = {
     caption: res.image_metadata.Description ?? null,
     backgroundColor: color,
     height: res.height,
-    id: `${res.image_metadata.Description.toLowerCase().replace(
-      ", ",
-      "-"
-    )}-${res.asset_id.substring(0, 4)}`,
+    id: `${res.image_metadata.Description.toLowerCase()
+      .replaceAll(" ", "-")
+      .replace(", ", "-")}-${res.asset_id.substring(0, 4)}`,
     responsiveUrls: [
-      cloudflareUrl
+      proxiedUrl
         .replace(`,w_${BASELINE_SIZE}`, ",w_600")
         .replace(`,h_${BASELINE_SIZE}`, ",h_600")
         .replaceAll(",", "%2C"),
-      cloudflareUrl
+      proxiedUrl
         .replace(`,w_${BASELINE_SIZE}`, ",w_1024")
         .replace(`,h_${BASELINE_SIZE}`, ",h_1024")
         .replaceAll(",", "%2C"),
     ],
     color: invertColor(color),
-    url: cloudflareUrl
-      .replace(",q_auto", ",q_auto,f_auto")
-      .replaceAll(",", "%2C"),
+    url: proxiedUrl.replaceAll(",", "%2C"),
     width: res.width,
   };
 
@@ -131,17 +130,13 @@ function invertColor(hex: string) {
   });
 
   window.addEventListener("keydown", (event) => {
-    if (
-      ["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft"].includes(event.code)
-    ) {
+    if (["ArrowRight", "ArrowLeft"].includes(event.code)) {
       event.preventDefault();
     }
     switch (event.code) {
-      case "ArrowUp":
       case "ArrowLeft":
         window.scrollBy(0, window.innerHeight);
         break;
-      case "ArrowDown":
       case "ArrowRight":
         window.scrollBy(0, -window.innerHeight);
         break;
