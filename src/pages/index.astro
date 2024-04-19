@@ -4,151 +4,144 @@ import Image from "../components/Image.astro";
 import { config } from "../config";
 import { v2 as cloudinary } from "cloudinary";
 
-const BASELINE_SIZE = 1500;
-const images = [];
-const { api } = cloudinary;
+let images = [];
+if (import.meta.env.DEV) {
+  const { default: $images } = await import("../images.json");
+  images = $images;
+} else {
+  const BASELINE_SIZE = 1500;
+  const { api } = cloudinary;
 
-cloudinary.config({
-  api_key: import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY,
-  api_secret:
-    import.meta.env.CLOUDINARY_API_SECRET ?? process.env.CLOUDINARY_API_SECRET,
-  cloud_name:
-    import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME,
-  secure: true,
-});
-
-const { resources } = await api.resources({
-  context: true,
-  max_results: 500,
-  metadata: true,
-  prefix: "photos",
-  type: "upload",
-});
-
-for await (const item of resources) {
-  const res = await api.resource(item.public_id, {
-    colors: true,
-    image_metadata: true,
+  cloudinary.config({
+    api_key:
+      import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY,
+    api_secret:
+      import.meta.env.CLOUDINARY_API_SECRET ??
+      process.env.CLOUDINARY_API_SECRET,
+    cloud_name:
+      import.meta.env.CLOUDINARY_CLOUD_NAME ??
+      process.env.CLOUDINARY_CLOUD_NAME,
+    secure: true,
   });
 
-  const url = cloudinary.url(res.public_id, {
-    crop: "fit",
-    height: BASELINE_SIZE,
-    quality: "auto",
-    width: BASELINE_SIZE,
+  const { resources } = await api.resources({
+    context: true,
+    max_results: 500,
+    metadata: true,
+    prefix: "photos",
+    type: "upload",
   });
-  const proxiedUrl = url
-    .replace(
+
+  for await (const item of resources) {
+    const res = await api.resource(item.public_id, {
+      colors: true,
+      image_metadata: true,
+    });
+    const url = cloudinary.url(res.public_id, {
+      crop: "fit",
+      format: "avif",
+      height: BASELINE_SIZE,
+      quality: "auto",
+      width: BASELINE_SIZE,
+    });
+    const proxiedUrl = url.replace(
       `https://res.cloudinary.com/${import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`,
       "https://images.slovyagin.com/upload/"
-    )
-    .replace(",q_auto", ",q_auto,f_avif");
+    );
 
-  const color = res.colors[3][0].toLowerCase();
-  const image = {
-    caption: res.image_metadata.Description ?? null,
-    backgroundColor: color,
-    height: res.height,
-    id: `${res.image_metadata.Description.toLowerCase()
-      .replaceAll(" ", "-")
-      .replace(", ", "-")}-${res.asset_id.substring(0, 4)}`,
-    responsiveUrls: [
-      proxiedUrl
-        .replace(`,w_${BASELINE_SIZE}`, ",w_600")
-        .replace(`,h_${BASELINE_SIZE}`, ",h_600")
+    const color = res.colors[3][0].toLowerCase();
+    const image = {
+      caption: res.image_metadata.Description ?? null,
+      backgroundColor: color,
+      height: res.height,
+      id: `${res.image_metadata.Description.toLowerCase()
+        .replaceAll(", ", "-")
+        .replaceAll(" ", "-")}-${res.asset_id.substring(0, 4)}`,
+      responsiveUrl: proxiedUrl
+        .replaceAll(`,w_${BASELINE_SIZE}`, ",w_1200")
+        .replaceAll(`,h_${BASELINE_SIZE}`, ",h_1200")
         .replaceAll(",", "%2C"),
-      proxiedUrl
-        .replace(`,w_${BASELINE_SIZE}`, ",w_1024")
-        .replace(`,h_${BASELINE_SIZE}`, ",h_1024")
-        .replaceAll(",", "%2C"),
-    ],
-    color: invertColor(color),
-    url: proxiedUrl.replaceAll(",", "%2C"),
-    width: res.width,
-  };
+      color: invertColor(color),
+      url: proxiedUrl.replaceAll(",", "%2C"),
+      width: res.width,
+    };
 
-  images.push(image);
-}
+    images.push(image);
+  }
 
-function rgbToHsl(r: number, g: number, b: number) {
-  const red = r / 255;
-  const green = g / 255;
-  const blue = b / 255;
-  const max = Math.max(red, green, blue);
-  const min = Math.min(red, green, blue);
-  let h: number;
-  let s: number;
-  const l = (max + min) / 2;
+  function rgbToHsl(r: number, g: number, b: number) {
+    const red = r / 255;
+    const green = g / 255;
+    const blue = b / 255;
+    const max = Math.max(red, green, blue);
+    const min = Math.min(red, green, blue);
+    let h: number;
+    let s: number;
+    const l = (max + min) / 2;
 
-  if (max === min) {
-    h = s = 0;
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case red:
-        h = (green - blue) / d + (green < blue ? 6 : 0);
-        break;
-      case green:
-        h = (blue - red) / d + 2;
-        break;
-      case blue:
-        h = (red - green) / d + 4;
-        break;
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case red:
+          h = (green - blue) / d + (green < blue ? 6 : 0);
+          break;
+        case green:
+          h = (blue - red) / d + 2;
+          break;
+        case blue:
+          h = (red - green) / d + 4;
+          break;
+      }
+      // @ts-ignore
+      h = h / 6;
     }
+
+    return [h, s, l];
+  }
+
+  function invertColor(hex: string) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+    if (!result) {
+      return "black";
+    }
+
+    const r = Number.parseInt(result[1] ?? "0", 16);
+    const g = Number.parseInt(result[2] ?? "0", 16);
+    const b = Number.parseInt(result[3] ?? "0", 16);
+
     // @ts-ignore
-    h = h / 6;
+    return rgbToHsl(r, g, b)[2] > 0.6 ? "black" : "white";
   }
-
-  return [h, s, l];
-}
-
-function invertColor(hex: string) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-  if (!result) {
-    return "black";
-  }
-
-  const r = Number.parseInt(result[1] ?? "0", 16);
-  const g = Number.parseInt(result[2] ?? "0", 16);
-  const b = Number.parseInt(result[3] ?? "0", 16);
-
-  // @ts-ignore
-  return rgbToHsl(r, g, b)[2] > 0.6 ? "black" : "white";
 }
 ---
 
 <script>
+  const mq = window.matchMedia("(width <= 50rem)");
+
   document.querySelectorAll("section a").forEach((link, index) => {
     link?.addEventListener("click", (event) => {
       event.preventDefault();
+      if (mq.matches) {
+        return;
+      }
       link.parentElement?.[
         index % 2 ? "previousElementSibling" : "nextElementSibling"
       ]?.scrollIntoView();
     });
   });
-
-  window.addEventListener("keydown", (event) => {
-    if (["ArrowRight", "ArrowLeft"].includes(event.code)) {
-      event.preventDefault();
-    }
-    switch (event.code) {
-      case "ArrowLeft":
-        window.scrollBy(0, window.innerHeight);
-        break;
-      case "ArrowRight":
-        window.scrollBy(0, -window.innerHeight);
-        break;
-    }
-  });
 </script>
 
 <Layout title={config.title}>
   <header>
-    <h1>{config.title}</h1>
-    <p>{config.bio}</p>
-    <p>{config.description}</p>
+    <div>
+      <h1>{config.title}</h1>
+      <p>{config.bio}</p>
+      <p>{config.description}</p>
+    </div>
   </header>
 
   {
@@ -160,7 +153,7 @@ function invertColor(hex: string) {
           color,
           height,
           id,
-          responsiveUrls,
+          responsiveUrl,
           url,
           width,
         },
@@ -174,9 +167,8 @@ function invertColor(hex: string) {
             height={height}
             id={id}
             loading={index < 3 ? "eager" : "lazy"}
-            mobileUrl={responsiveUrls[0]!}
+            responsiveUrl={responsiveUrl}
             src={url}
-            tabletUrl={responsiveUrls[1]!}
             width={width}
           />
         );
@@ -191,7 +183,7 @@ function invertColor(hex: string) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (width <= 75rem) {
+  @media (width <= 50rem) {
     body {
       grid-template-columns: 1fr;
     }
@@ -200,7 +192,12 @@ function invertColor(hex: string) {
   header {
     padding: var(--gap);
 
-    > * {
+    > div {
+      position: sticky;
+      top: 0;
+    }
+
+    * {
       font-size: 1rem;
       font-weight: normal;
       margin: 0;
@@ -209,7 +206,7 @@ function invertColor(hex: string) {
     }
   }
 
-  @media (width <= 75rem) {
+  @media (width <= 50rem) {
     header {
       min-height: 30vh;
     }

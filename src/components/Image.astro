@@ -6,9 +6,8 @@ interface Props {
   height: number;
   id: string;
   loading: HTMLImageElement["loading"];
-  mobileUrl: string;
+  responsiveUrl: string;
   src: string;
-  tabletUrl: string;
   width: number;
 }
 const {
@@ -18,9 +17,8 @@ const {
   height,
   id,
   loading,
-  mobileUrl,
+  responsiveUrl,
   src,
-  tabletUrl,
   width,
 } = Astro.props;
 ---
@@ -28,14 +26,15 @@ const {
 <section id={id} style={`background-color: ${backgroundColor}`}>
   <a href={`#${id}`}>
     <figure>
-      <img
-        src={src}
-        loading={loading}
-        height={~~(height * 0.52)}
-        width={~~(width * 0.52)}
-        srcset={`${mobileUrl} 480w, ${tabletUrl} 768w, ${src} 1500w`}
-        sizes="(max-width: 480px) 600px, (max-width: 768px) 1024px, 1500px"
-      />
+      <picture>
+        <source srcset={responsiveUrl} media="(max-width: 50rem)" />
+        <img
+          src={src}
+          loading={loading}
+          height={~~(height * 0.52)}
+          width={~~(width * 0.52)}
+        />
+      </picture>
       {caption ? <figcaption class={color}>{caption}</figcaption> : null}
     </figure>
   </a>
@@ -57,13 +56,12 @@ const {
     }
   }
 
-  @media (width <= 75rem) {
+  @media (width <= 50rem) {
     section {
       height: auto;
       min-height: 50vh;
       padding: calc(var(--gap) * 0.5);
       padding-block-end: calc(var(--gap) * 4);
-      scroll-snap-align: unset;
     }
   }
 
@@ -86,7 +84,7 @@ const {
     width: auto;
   }
 
-  @media (width <= 75rem) {
+  @media (width <= 50rem) {
     img {
       max-width: calc(100vw - var(--gap));
       max-height: calc(100vw - var(--gap));
