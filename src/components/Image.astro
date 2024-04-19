@@ -96,9 +96,13 @@ const {
     color: var(--black);
     font-size: max(0.5rem, 1cqh);
     margin: 0;
-    mix-blend-mode: overlay;
+    opacity: 0.75;
     padding-inline: calc(var(--gap) * 0.125);
     text-align: end;
     user-select: text;
+
+    &.white {
+      color: var(--white);
+    }
   }
 </style>
