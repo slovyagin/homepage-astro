@@ -129,6 +129,24 @@ function invertColor(hex: string) {
       ]?.scrollIntoView();
     });
   });
+
+  window.addEventListener("keydown", (event) => {
+    if (
+      ["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft"].includes(event.code)
+    ) {
+      event.preventDefault();
+    }
+    switch (event.code) {
+      case "ArrowUp":
+      case "ArrowLeft":
+        window.scrollBy(0, window.innerHeight);
+        break;
+      case "ArrowDown":
+      case "ArrowRight":
+        window.scrollBy(0, -window.innerHeight);
+        break;
+    }
+  });
 </script>
 
 <Layout title={config.title}>
