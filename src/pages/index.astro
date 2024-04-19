@@ -9,9 +9,11 @@ const images = [];
 const { api } = cloudinary;
 
 cloudinary.config({
-  api_key: import.meta.env.CLOUDINARY_API_KEY,
-  api_secret: import.meta.env.CLOUDINARY_API_SECRET,
-  cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+  api_key: import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY,
+  api_secret:
+    import.meta.env.CLOUDINARY_API_SECRET ?? process.env.CLOUDINARY_API_SECRET,
+  cloud_name:
+    import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME,
   secure: true,
 });
 
