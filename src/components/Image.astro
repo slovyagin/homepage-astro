@@ -93,25 +93,11 @@ const {
   }
 
   figcaption {
-    color: var(--white-caption);
     margin: 0;
     padding-inline: calc(var(--gap) * 0.125);
     text-align: end;
     user-select: text;
-    font-size: 0.8rem;
-
-    &.black {
-      color: var(--black-caption);
-    }
-
-    &.white {
-      color: var(--white-caption);
-    }
-  }
-
-  @media (width <= 75rem) {
-    figcaption {
-      font-size: max(0.5rem, 1vw);
-    }
+    font-size: max(0.5rem, 1cqh);
+    mix-blend-mode: overlay;
   }
 </style>
