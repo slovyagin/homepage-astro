@@ -42,7 +42,7 @@ for await (const item of resources) {
       `https://res.cloudinary.com/${import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`,
       "https://images.slovyagin.com/upload/"
     )
-    .replace(",q_auto", ",q_auto,f_auto");
+    .replace(",q_auto", ",q_auto,f_avif");
 
   const color = res.colors[3][0].toLowerCase();
   const image = {
