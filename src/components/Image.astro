@@ -31,8 +31,8 @@ const {
       <img
         src={src}
         loading={loading}
-        height={~~(height * 0.5)}
-        width={~~(width * 0.5)}
+        height={~~(height * 0.52)}
+        width={~~(width * 0.52)}
         srcset={`${mobileUrl} 480w, ${tabletUrl} 768w, ${src} 1500w`}
         sizes="(max-width: 480px) 600px, (max-width: 768px) 1024px, 1500px"
       />
@@ -42,11 +42,19 @@ const {
 </section>
 
 <style>
+  :root {
+    --size: min(calc(50vw - var(--gap) * 2), calc(100vh - var(--gap) * 4));
+  }
   section {
     height: 100vh;
     padding: var(--gap);
     text-transform: uppercase;
     scroll-snap-align: start;
+
+    &:target {
+      background-color: var(--slime) !important;
+      color: var(--black) !important;
+    }
   }
 
   @media (width <= 75rem) {
@@ -72,8 +80,8 @@ const {
   img {
     display: block;
     height: auto;
-    max-height: min(calc(50vw - var(--gap) * 2), calc(100vh - var(--gap) * 4));
-    max-width: min(calc(50vw - var(--gap) * 2), calc(100vh - var(--gap) * 4));
+    max-height: var(--size);
+    max-width: var(--size);
     width: auto;
   }
 

@@ -120,8 +120,19 @@ function invertColor(hex: string) {
 }
 ---
 
+<script>
+  document.querySelectorAll("section a").forEach((link, index) => {
+    link?.addEventListener("click", (event) => {
+      event.preventDefault();
+      link.parentElement?.[
+        index % 2 ? "previousElementSibling" : "nextElementSibling"
+      ]?.scrollIntoView();
+    });
+  });
+</script>
+
 <Layout title={config.title}>
-  <header id="masthead">
+  <header>
     <h1>{config.title}</h1>
     <p>{config.bio}</p>
     <p>{config.description}</p>
