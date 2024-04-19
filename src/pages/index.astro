@@ -119,6 +119,22 @@ if (import.meta.env.MODE === "production") {
 
   images = $images;
 }
+
+function shuffle(array: unknown[]) {
+  let currentIndex = array.length;
+
+  while (currentIndex !== 0) {
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+}
+
+shuffle(images);
 ---
 
 <script>
@@ -193,6 +209,7 @@ if (import.meta.env.MODE === "production") {
 
   header {
     padding: var(--gap);
+    scroll-snap-align: start;
 
     > div {
       position: sticky;
@@ -200,7 +217,7 @@ if (import.meta.env.MODE === "production") {
     }
 
     * {
-      font-size: 1rem;
+      font-size: clamp(0.65rem, 1vw, 1rem);
       font-weight: normal;
       margin: 0;
       text-transform: uppercase;
