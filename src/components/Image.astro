@@ -46,10 +46,14 @@ const {
 
 <style>
   :root {
-    --size: min(calc(50vw - var(--gap) * 2), calc(100vh - var(--gap) * 4));
+    --size: min(
+      calc(50vw - var(--gap) * 2),
+      calc(100vh - var(--gap) * 4),
+      var(--max-size)
+    );
   }
   section {
-    height: 100vh;
+    height: min(100vw, 100vh);
     padding: var(--gap);
     text-transform: uppercase;
     scroll-snap-align: start;
@@ -99,7 +103,7 @@ const {
 
   figcaption {
     color: var(--black);
-    font-size: clamp(0.65rem, 0.65vw, 1rem);
+    font-size: clamp(0.65rem, 0.65vw, 0.8rem);
     margin: 0;
     opacity: 0.75;
     padding-inline: calc(var(--gap) * 0.125);

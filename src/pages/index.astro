@@ -209,7 +209,11 @@ shuffle(images);
 <style>
   body {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: auto 1fr;
+
+    > *:nth-child(odd) {
+      max-width: var(--max-size);
+    }
   }
 
   @media (width <= 50rem) {
