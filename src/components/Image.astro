@@ -23,15 +23,19 @@ const {
 } = Astro.props;
 ---
 
-<section id={id} style={`background-color: ${backgroundColor}`}>
+<section
+  id={id}
+  style={`background-color: ${backgroundColor ?? "transparent"}`}
+>
   <a href={`#${id}`}>
     <figure>
       <picture>
         <source srcset={responsiveUrl} media="(max-width: 50rem)" />
         <img
-          src={src}
-          loading={loading}
+          alt=""
           height={~~(height * 0.52)}
+          loading={loading}
+          src={src}
           width={~~(width * 0.52)}
         />
       </picture>
@@ -58,10 +62,12 @@ const {
 
   @media (width <= 50rem) {
     section {
+      display: grid;
       height: auto;
-      min-height: 40vh;
-      padding: calc(var(--gap) * 0.5);
+      min-height: 100dvh;
       padding-block-end: calc(var(--gap) * 4);
+      padding: calc(var(--gap) * 0.5);
+      place-items: center;
     }
   }
 
@@ -71,9 +77,9 @@ const {
   }
 
   figure {
-    margin: 0;
     display: grid;
     gap: 0.5cqh;
+    margin: 0;
   }
 
   img {

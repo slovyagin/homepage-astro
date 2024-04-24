@@ -156,9 +156,9 @@ shuffle(images);
 <Layout title={config.title}>
   <header>
     <div>
-      <h1>{config.title}</h1>
-      <p>{config.bio}</p>
-      <p>{config.description}</p>
+      {config.title ? <h1>{config.title}</h1> : null}
+      {config.bio ? <p>{config.bio}</p> : null}
+      {config.description ? <p>{config.description}</p> : null}
     </div>
   </header>
 
