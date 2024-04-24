@@ -1,10 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Image from "../components/Image.astro";
+import ImageComponent from "../components/Image.astro";
 import { config } from "../config";
 import { v2 as cloudinary } from "cloudinary";
 
-let images = [];
+interface Image {
+  backgroundColor: string;
+  caption: string;
+  color: string;
+  height: number;
+  id: string;
+  responsiveUrl: string;
+  url: string;
+  width: number;
+}
+
+let images: Array<Image> = [];
 if (import.meta.env.MODE === "production") {
   const BASELINE_SIZE = 1500;
   const { api } = cloudinary;
@@ -178,7 +189,7 @@ shuffle(images);
         index
       ) => {
         return (
-          <Image
+          <ImageComponent
             backgroundColor={backgroundColor}
             caption={caption}
             color={color}
