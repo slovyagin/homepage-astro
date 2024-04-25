@@ -149,7 +149,7 @@ shuffle(images);
 ---
 
 <script>
-  const mq = window.matchMedia("(width <= 50rem)");
+  const mq = window.matchMedia("(width <= 40rem)");
 
   document.querySelectorAll("section a").forEach((link, index) => {
     link?.addEventListener("click", (event) => {
@@ -212,11 +212,12 @@ shuffle(images);
     grid-template-columns: auto 1fr;
 
     > *:nth-child(odd) {
+      min-width: var(--size);
       max-width: var(--max-size);
     }
   }
 
-  @media (width <= 50rem) {
+  @media (width <= 40rem) {
     body {
       grid-template-columns: 1fr;
     }
@@ -240,7 +241,7 @@ shuffle(images);
     }
   }
 
-  @media (width <= 50rem) {
+  @media (width <= 40rem) {
     header {
       min-height: 30vh;
     }
