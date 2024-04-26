@@ -1,25 +1,25 @@
 ---
 interface Props {
-  backgroundColor: string;
-  caption?: string;
-  color: string;
-  height: number;
-  id: string;
-  loading: HTMLImageElement["loading"];
-  responsiveUrl: string;
-  src: string;
-  width: number;
+	backgroundColor: string;
+	caption?: string;
+	color: string;
+	height: number;
+	id: string;
+	loading: HTMLImageElement["loading"];
+	responsiveUrl: string;
+	src: string;
+	width: number;
 }
 const {
-  backgroundColor,
-  caption,
-  color,
-  height,
-  id,
-  loading,
-  responsiveUrl,
-  src,
-  width,
+	backgroundColor,
+	caption,
+	color,
+	height,
+	id,
+	loading,
+	responsiveUrl,
+	src,
+	width,
 } = Astro.props;
 ---
 
@@ -27,21 +27,21 @@ const {
   id={id}
   style={`background-color: ${backgroundColor ?? "transparent"}`}
 >
-  <a href={`#${id}`}>
-    <figure>
-      <picture>
-        <source srcset={responsiveUrl} media="(max-width: 50rem)" />
-        <img
-          alt=""
-          height={~~(height * 0.52)}
-          loading={loading}
-          src={src}
-          width={~~(width * 0.52)}
-        />
-      </picture>
+  <figure>
+      <a href={`#${id}`}>
+        <picture>
+          <source srcset={responsiveUrl} media="(max-width: 50rem)" />
+          <img
+            alt=""
+            height={~~(height * 0.52)}
+            loading={loading}
+            src={src}
+            width={~~(width * 0.52)}
+          />
+        </picture>
+      </a>
       {caption ? <figcaption class={color}>{caption}</figcaption> : null}
     </figure>
-  </a>
 </section>
 
 <style>
@@ -52,11 +52,15 @@ const {
       var(--max-size)
     );
   }
+
   section {
-    height: min(100vw, 100vh);
+    align-items: start;
+    display: grid;
+    justify-content: start;
+    min-height: min(100vw, 100vh);
     padding: var(--gap);
-    text-transform: uppercase;
     scroll-snap-align: start;
+    text-transform: uppercase;
 
     &:target {
       background-color: var(--slime) !important;
@@ -80,9 +84,13 @@ const {
     text-decoration: none;
   }
 
+  picture {
+    width: fit-content;
+  }
+
   figure {
     display: grid;
-    gap: 0.5cqh;
+    gap: min(0.5cqh, calc(var(--gap) * 0.5));
     margin: 0;
   }
 
@@ -108,6 +116,7 @@ const {
     opacity: 0.75;
     padding-inline: calc(var(--gap) * 0.125);
     text-align: end;
+    -webkit-user-select: text;
     user-select: text;
 
     &.white {
