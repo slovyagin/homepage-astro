@@ -128,9 +128,11 @@ if (import.meta.env.MODE === "production") {
 		const g = Number.parseInt(result[2] ?? "0", 16);
 		const b = Number.parseInt(result[3] ?? "0", 16);
 
+		// @ts-ignore
 		return rgbToHsl(r, g, b)[2] > 0.5;
 	}
 } else {
+	// @ts-ignore
 	const { default: $images } = await import("../images.json");
 
 	images = $images;
