@@ -24,6 +24,8 @@ const {
 ---
 
 <section
+  class={color}
+  data-background={backgroundColor ?? "transparent"}
   id={id}
   style={`background-color: ${backgroundColor ?? "transparent"}`}
 >
@@ -40,7 +42,7 @@ const {
           />
         </picture>
       </a>
-      {caption ? <figcaption class={color}>{caption}</figcaption> : null}
+      {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
 </section>
 
@@ -53,8 +55,23 @@ const {
     );
   }
 
+  @keyframes target {
+    0% {
+      background-color: var(--slime);
+      color: var(--black);
+    }
+    80% {
+      background-color: var(--slime);
+      color: var(--black);
+    }
+    100% {
+      background-color: attr(data-background);
+    }
+  }
+
   section {
     align-items: start;
+    background-color: attr(data-background color);
     display: grid;
     justify-content: start;
     min-height: min(100vw, 100vh);
@@ -62,9 +79,14 @@ const {
     scroll-snap-align: start;
     text-transform: uppercase;
 
+    &.black {
+      color: var(--black);
+    }
+
     &:target {
-      background-color: var(--slime) !important;
-      color: var(--black) !important;
+	    animation-duration: 5s;
+	    animation-name: target;
+      animation-timing-function: ease;
     }
   }
 
@@ -76,6 +98,7 @@ const {
       padding-block-end: calc(var(--gap) * 4);
       padding: calc(var(--gap) * 0.5);
       place-content: center;
+
     }
   }
 
@@ -110,7 +133,6 @@ const {
   }
 
   figcaption {
-    color: var(--black);
     font-size: clamp(0.65rem, 0.65vw, 0.8rem);
     margin: 0;
     opacity: 0.75;
@@ -118,9 +140,5 @@ const {
     text-align: end;
     -webkit-user-select: text;
     user-select: text;
-
-    &.white {
-      color: var(--white);
-    }
   }
 </style>

@@ -60,32 +60,28 @@ const { title } = Astro.props;
       U+2032-2033, U+20AC;
   }
 
-  * {
-    font-family:
-      Cooper Hewitt,
-      system-ui,
-      sans-serif;
-    letter-spacing: 0.1em;
-    line-height: 1.375;
-    position: relative;
-    color: var(--white);
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-  }
-
   *,
   ::before,
   ::after {
     box-sizing: border-box;
+    position: relative;
   }
 
   html {
     background-color: var(--black);
     color: var(--white);
     scroll-snap-type: y mandatory;
+    font-family:
+      Cooper Hewitt,
+      system-ui,
+      sans-serif;
+    letter-spacing: 0.1em;
+    line-height: 1.375;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {

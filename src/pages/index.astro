@@ -19,7 +19,6 @@ let images: Array<Image> = [];
 if (import.meta.env.MODE === "production") {
 	const BASELINE_SIZE = 1400;
 	const RESPONSIVE_SIZE = 1100;
-	const { api } = cloudinary;
 
 	cloudinary.config({
 		api_key:
@@ -35,7 +34,7 @@ if (import.meta.env.MODE === "production") {
 
 	try {
 		console.log("Fetching images from Cloudinary...");
-		const { resources } = await api.resources({
+		const { resources } = await cloudinary.api.resources({
 			context: true,
 			max_results: 500,
 			metadata: true,
@@ -45,7 +44,7 @@ if (import.meta.env.MODE === "production") {
 		console.log("Images fetched successfully");
 
 		for await (const item of resources) {
-			const res = await api.resource(item.public_id, {
+			const res = await cloudinary.api.resource(item.public_id, {
 				colors: true,
 				image_metadata: true,
 			});
