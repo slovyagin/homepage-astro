@@ -33,57 +33,64 @@ if (import.meta.env.MODE === "production") {
 		secure: true,
 	});
 
-	const { resources } = await api.resources({
-		context: true,
-		max_results: 500,
-		metadata: true,
-		prefix: "photos",
-		type: "upload",
-	});
-
-	for await (const item of resources) {
-		const res = await api.resource(item.public_id, {
-			colors: true,
-			image_metadata: true,
+	try {
+		console.log("Fetching images from Cloudinary...");
+		const { resources } = await api.resources({
+			context: true,
+			max_results: 500,
+			metadata: true,
+			prefix: "photos",
+			type: "upload",
 		});
+		console.log("Images fetched successfully");
 
-		const url = cloudinary.url(res.public_id, {
-			crop: "fit",
-			format: "avif",
-			height: BASELINE_SIZE,
-			quality: "auto",
-			width: BASELINE_SIZE,
-		});
+		for await (const item of resources) {
+			const res = await api.resource(item.public_id, {
+				colors: true,
+				image_metadata: true,
+			});
 
-		const proxiedUrl = url.replace(
-			`https://res.cloudinary.com/${
-				import.meta.env.CLOUDINARY_CLOUD_NAME ??
-				process.env.CLOUDINARY_CLOUD_NAME
-			}/image/upload/`,
-			"https://images.slovyagin.com/upload/",
-		);
+			const url = cloudinary.url(res.public_id, {
+				crop: "fit",
+				format: "avif",
+				height: BASELINE_SIZE,
+				quality: "auto",
+				width: BASELINE_SIZE,
+			});
 
-		const color = res.colors[3][0].toLowerCase();
+			const proxiedUrl = url.replace(
+				`https://res.cloudinary.com/${
+					import.meta.env.CLOUDINARY_CLOUD_NAME ??
+					process.env.CLOUDINARY_CLOUD_NAME
+				}/image/upload/`,
+				"https://images.slovyagin.com/upload/",
+			);
 
-		const image = {
-			backgroundColor: color,
-			caption: res.image_metadata.Description ?? null,
-			color: invertColor(color) ? "black" : "white",
-			height: res.height,
-			id: res.image_metadata.Description
-				? `${res.image_metadata.Description.toLowerCase()
-						.replaceAll(", ", "-")
-						.replaceAll(" ", "-")}-${res.asset_id.substring(0, 4)}`
-				: `p-${res.asset_id.substring(0, 4)}`,
-			responsiveUrl: proxiedUrl
-				.replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
-				.replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
-				.replaceAll(",", "%2C"),
-			url: proxiedUrl.replaceAll(",", "%2C"),
-			width: res.width,
-		};
+			const color = res.colors[3][0].toLowerCase();
 
-		images.push(image);
+			const image = {
+				backgroundColor: color,
+				caption: res.image_metadata.Description ?? null,
+				color: invertColor(color) ? "black" : "white",
+				height: res.height,
+				id: res.image_metadata.Description
+					? `${res.image_metadata.Description.toLowerCase()
+							.replaceAll(", ", "-")
+							.replaceAll(" ", "-")}-${res.asset_id.substring(0, 4)}`
+					: `p-${res.asset_id.substring(0, 4)}`,
+				responsiveUrl: proxiedUrl
+					.replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
+					.replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
+					.replaceAll(",", "%2C"),
+				url: proxiedUrl.replaceAll(",", "%2C"),
+				width: res.width,
+			};
+
+			images.push(image);
+		}
+	} catch (error) {
+		console.error(error);
+		process.exit(1);
 	}
 
 	function rgbToHsl(r: number, g: number, b: number) {
