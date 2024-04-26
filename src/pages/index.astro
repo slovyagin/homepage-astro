@@ -70,9 +70,11 @@ if (import.meta.env.MODE === "production") {
 			caption: res.image_metadata.Description ?? null,
 			color: invertColor(color) ? "black" : "white",
 			height: res.height,
-			id: `${res.image_metadata.Description.toLowerCase()
-				.replaceAll(", ", "-")
-				.replaceAll(" ", "-")}-${res.asset_id.substring(0, 4)}`,
+			id: res.image_metadata.Description
+				? `${res.image_metadata.Description.toLowerCase()
+						.replaceAll(", ", "-")
+						.replaceAll(" ", "-")}-${res.asset_id.substring(0, 4)}`
+				: `p-${res.asset_id.substring(0, 4)}`,
 			responsiveUrl: proxiedUrl
 				.replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
 				.replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
