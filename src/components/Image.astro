@@ -51,7 +51,7 @@ const {
     --size: min(
       calc(50vw - var(--gap) * 2),
       calc(100vh - var(--gap) * 4),
-      var(--max-size)
+      calc(var(--max-size) - var(--gap) * 2)
     );
   }
 
@@ -74,7 +74,7 @@ const {
     background-color: attr(data-background color);
     display: grid;
     justify-content: start;
-    min-height: min(100vw, 100vh);
+    min-height: min(70vw, 100vh);
     padding: var(--gap);
     scroll-snap-align: start;
     text-transform: uppercase;
