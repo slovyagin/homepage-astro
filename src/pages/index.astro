@@ -1,14 +1,8 @@
 ---
-import fs from "node:fs";
 import Layout from "../layouts/Layout.astro";
 import ImageComponent from "../components/Image.astro";
 import { config } from "../config";
 import { v2 as cloudinary } from "cloudinary";
-const extra: Promise<Array<Image>> = fetch(
-	"http://localhost:4321/remaining-images.json",
-)
-	.then((res) => res.json())
-	.then((data) => data);
 
 interface Image {
 	backgroundColor: string;
@@ -168,15 +162,6 @@ function shuffle<T>(array: T[]) {
 }
 
 shuffle(images);
-
-const initialImages = images.slice(0, 3);
-const remainingImages = images.slice(3);
-
-fs.writeFileSync(
-	"public/remaining-images.json",
-	JSON.stringify(remainingImages, null, 2),
-	"utf-8",
-);
 ---
 
 <script>
@@ -205,7 +190,7 @@ fs.writeFileSync(
   </header>
 
   {
-    [...initialImages].map(
+    images.map(
       (
         {
           backgroundColor,
@@ -235,37 +220,6 @@ fs.writeFileSync(
       }
     )
   }
-  {extra.then((images) => {
-	return images.map(
-	  (
-		{
-		  backgroundColor,
-		  caption,
-		  color,
-		  height,
-		  id,
-		  responsiveUrl,
-		  url,
-		  width,
-		}
-	  ) => {
-		return (
-		  <ImageComponent
-			backgroundColor={backgroundColor}
-			caption={caption}
-			color={color}
-			height={height}
-			id={id}
-			loading="lazy"
-			responsiveUrl={responsiveUrl}
-			src={url}
-			width={width}
-		  />
-		);
-	  }
-	);
-  })}
-
 </Layout>
 
 <style>
