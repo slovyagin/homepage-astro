@@ -1,8 +1,14 @@
 ---
+import fs from "node:fs";
 import Layout from "../layouts/Layout.astro";
 import ImageComponent from "../components/Image.astro";
 import { config } from "../config";
 import { v2 as cloudinary } from "cloudinary";
+const extra: Promise<Array<Image>> = fetch(
+	"http://localhost:4321/remaining-images.json",
+)
+	.then((res) => res.json())
+	.then((data) => data);
 
 interface Image {
 	backgroundColor: string;
@@ -33,7 +39,7 @@ if (import.meta.env.MODE === "production") {
 	});
 
 	try {
-		console.log("Fetching images from Cloudinary...");
+		console.log("Fetching images from Cloudinary...\n");
 		const { resources } = await cloudinary.api.resources({
 			context: true,
 			max_results: 500,
@@ -41,7 +47,7 @@ if (import.meta.env.MODE === "production") {
 			prefix: "photos",
 			type: "upload",
 		});
-		console.log("Images fetched successfully");
+		console.log("Images fetched successfully\n");
 
 		for await (const item of resources) {
 			const res = await cloudinary.api.resource(item.public_id, {
@@ -141,18 +147,19 @@ if (import.meta.env.MODE === "production") {
 	}
 } else {
 	// @ts-ignore
-	const { default: $images } = await import("../images.json");
+	const { default: $images } = await import("../sample-images.json");
 
 	images = $images;
 }
 
-function shuffle(array: unknown[]) {
+function shuffle<T>(array: T[]) {
 	let currentIndex = array.length;
 
 	while (currentIndex !== 0) {
 		const randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex--;
 
+		// @ts-ignore
 		[array[currentIndex], array[randomIndex]] = [
 			array[randomIndex],
 			array[currentIndex],
@@ -161,6 +168,15 @@ function shuffle(array: unknown[]) {
 }
 
 shuffle(images);
+
+const initialImages = images.slice(0, 3);
+const remainingImages = images.slice(3);
+
+fs.writeFileSync(
+	"public/remaining-images.json",
+	JSON.stringify(remainingImages, null, 2),
+	"utf-8",
+);
 ---
 
 <script>
@@ -179,6 +195,7 @@ shuffle(images);
   });
 </script>
 
+
 <Layout title={config.title}>
   <header>
     <div>
@@ -188,7 +205,7 @@ shuffle(images);
   </header>
 
   {
-    images.map(
+    [...initialImages].map(
       (
         {
           backgroundColor,
@@ -218,6 +235,37 @@ shuffle(images);
       }
     )
   }
+  {extra.then((images) => {
+	return images.map(
+	  (
+		{
+		  backgroundColor,
+		  caption,
+		  color,
+		  height,
+		  id,
+		  responsiveUrl,
+		  url,
+		  width,
+		}
+	  ) => {
+		return (
+		  <ImageComponent
+			backgroundColor={backgroundColor}
+			caption={caption}
+			color={color}
+			height={height}
+			id={id}
+			loading="lazy"
+			responsiveUrl={responsiveUrl}
+			src={url}
+			width={width}
+		  />
+		);
+	  }
+	);
+  })}
+
 </Layout>
 
 <style>

@@ -20,7 +20,7 @@ const { title } = Astro.props;
     <meta property="og:image" content={config.image} />
     <meta
       property="og:image:alt"
-      content={[config.title, config.description].join(", ")}
+      content={[config.title, config.description].filter(Boolean).join(", ")}
     />
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="website" />
