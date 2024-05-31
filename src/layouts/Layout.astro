@@ -15,6 +15,7 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <meta name="description" content={config.description} />
+
     <meta property="og:title" content={config.title} />
     <meta property="og:description" content={config.description} />
     <meta property="og:image" content={config.image} />
@@ -24,8 +25,13 @@ const { title } = Astro.props;
     />
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:url" content={config.url} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={config.title}>
+    <meta name="twitter:description" content={config.description}>
+    <meta name="twitter:image" content={config.image}>
+
     <link rel="canonical" href={config.url} />
     <link
       rel="preload"

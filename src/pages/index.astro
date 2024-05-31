@@ -16,10 +16,10 @@ interface Image {
 }
 
 let images: Array<Image> = [];
-if (import.meta.env.MODE === "production") {
-	const BASELINE_SIZE = 1400;
-	const RESPONSIVE_SIZE = 1100;
+const BASELINE_SIZE = 1400;
+const RESPONSIVE_SIZE = 1100;
 
+if (import.meta.env.MODE === "production") {
 	cloudinary.config({
 		api_key:
 			import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY,
@@ -41,7 +41,7 @@ if (import.meta.env.MODE === "production") {
 			prefix: "photos",
 			type: "upload",
 		});
-		console.log("Images fetched successfully\n");
+		console.log("\nImages fetched successfully\n");
 
 		for await (const item of resources) {
 			const res = await cloudinary.api.resource(item.public_id, {
