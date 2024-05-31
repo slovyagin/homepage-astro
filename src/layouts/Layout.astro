@@ -16,6 +16,10 @@ const { title } = Astro.props;
     <title>{title}</title>
     <meta name="description" content={config.description} />
 
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href='/favicon.png'>
+
     <meta property="og:title" content={config.title} />
     <meta property="og:description" content={config.description} />
     <meta property="og:image" content={config.image} />
