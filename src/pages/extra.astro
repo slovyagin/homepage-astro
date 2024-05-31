@@ -28,7 +28,7 @@ const images: Array<Image> = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
             color={color}
             height={height}
             id={id}
-            loading={index < 3 ? "eager" : "lazy"}
+            loading={index === 0 ? "eager" : "lazy"}
             responsiveUrl={responsiveUrl}
             src={url}
             width={width}
