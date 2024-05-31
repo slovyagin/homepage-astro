@@ -1,0 +1,40 @@
+---
+import ImageComponent from "../components/Image.astro";
+import { INITIAL_IMAGES_COUNT } from "../constants";
+import type { Image } from "../middleware";
+
+const images: Array<Image> = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
+---
+<>
+{
+    images?.map(
+      (
+        {
+          backgroundColor,
+          caption,
+          color,
+          height,
+          id,
+          responsiveUrl,
+          url,
+          width,
+        },
+        index
+      ) => {
+        return (
+          <ImageComponent
+            backgroundColor={backgroundColor}
+            caption={caption}
+            color={color}
+            height={height}
+            id={id}
+            loading={index < 3 ? "eager" : "lazy"}
+            responsiveUrl={responsiveUrl}
+            src={url}
+            width={width}
+          />
+        );
+      }
+    )
+  }
+</>
