@@ -8,6 +8,22 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 ---
 
 <script>
+  const mq = window.matchMedia("(width <= 40rem)");
+
+  document.querySelectorAll("section a").forEach((link, index) => {
+    link?.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (mq.matches) {
+        return;
+      }
+      link.closest('section')?.[
+        index % 2 ? "previousElementSibling" : "nextElementSibling"
+      ]?.scrollIntoView();
+    });
+  });
+</script>
+
+<script>
   const res = await fetch('/extra')
 
   if (res.ok) {
@@ -25,22 +41,6 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
       }
     }
   }
-</script>
-
-<script>
-  const mq = window.matchMedia("(width <= 40rem)");
-
-  document.querySelectorAll("section a").forEach((link, index) => {
-    link?.addEventListener("click", (event) => {
-      event.preventDefault();
-      if (mq.matches) {
-        return;
-      }
-      link.closest('section')?.[
-        index % 2 ? "previousElementSibling" : "nextElementSibling"
-      ]?.scrollIntoView();
-    });
-  });
 </script>
 
 <Layout title={config.title}>
