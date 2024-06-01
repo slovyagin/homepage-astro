@@ -9,7 +9,6 @@ interface Props {
 	responsiveUrl: string;
 	src: string;
 	width: number;
-	skipStyles?: boolean;
 }
 
 const {
@@ -20,7 +19,6 @@ const {
 	id,
 	loading,
 	responsiveUrl,
-	skipStyles,
 	src,
 	width,
 } = Astro.props;
@@ -49,8 +47,7 @@ const {
     </figure>
 </section>
 
-{
-  !skipStyles  ? <style>
+<style>
   :root {
     --size: min(
       calc(50vw - var(--gap) * 2),
@@ -144,5 +141,4 @@ const {
     user-select: text;
     -webkit-user-select: text;
   }
-</style> : null
-}
+</style>

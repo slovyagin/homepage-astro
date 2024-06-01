@@ -11,15 +11,23 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   const res = await fetch('/extra')
 
   if (res.ok) {
+    console.time('fetch')
     const htmlString = await res.text()
+    console.timeEnd('fetch')
+
+    console.time('parse')
     const $slot = document.getElementById('slot')
 
     if ($slot) {
       const doc = new DOMParser().parseFromString(htmlString, "text/html")
+      const content = doc.body.querySelector('* > div')
 
-      $slot.insertAdjacentHTML("beforebegin", doc.body.innerHTML);
-      $slot.remove();
+      if (content) {
+        $slot.insertAdjacentHTML("beforebegin", content.innerHTML);
+        $slot.remove();
+      }
     }
+    console.timeEnd('parse')
   }
 </script>
 
