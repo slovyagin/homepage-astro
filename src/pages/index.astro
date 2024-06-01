@@ -47,7 +47,7 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   if (hash) {
     const target = document.querySelector(`${hash} a`);
     
-    target?.click();
+    (target as HTMLElement | null)?.click();
   }
 </script>
 
