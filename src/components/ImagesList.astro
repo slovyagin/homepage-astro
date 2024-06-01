@@ -1,0 +1,43 @@
+---
+import ImageComponent from "./Image.astro";
+import type { Image } from "../types";
+
+interface Props {
+	images: Array<Image>;
+}
+
+const { images } = Astro.props;
+---
+
+<>
+{
+    images?.map(
+      (
+        {
+          backgroundColor,
+          caption,
+          color,
+          height,
+          id,
+          responsiveUrl,
+          url,
+          width,
+        }
+      ) => {
+        return (
+          <ImageComponent
+            backgroundColor={backgroundColor}
+            caption={caption}
+            color={color}
+            height={height}
+            id={id}
+            loading="lazy"
+            responsiveUrl={responsiveUrl}
+            src={url}
+            width={width}
+          />
+        );
+      }
+    )
+  }
+<>

@@ -1,16 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { v2 as cloudinary } from "cloudinary";
-
-export interface Image {
-  backgroundColor: string;
-  caption: string;
-  color: "black" | "white";
-  height: number;
-  id: string;
-  responsiveUrl: string;
-  url: string;
-  width: number;
-}
+import type { Image } from "./types";
 
 let images: Array<Image> = [];
 const BASELINE_SIZE = 1400;
@@ -136,10 +126,9 @@ if (import.meta.env.MODE === "production") {
     return Number(rgbToHsl(r, g, b)[2]) > 0.5;
   }
 } else {
-  // @ts-ignore
-  const { default: $images } = await import("./sample-images.json");
+  const { default: sampleImages } = await import("./sample-images.json");
 
-  images = $images as Array<Image>;
+  images = sampleImages as Array<Image>;
 }
 
 function shuffle<T>(array: T[]) {

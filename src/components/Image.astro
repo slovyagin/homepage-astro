@@ -1,14 +1,9 @@
 ---
-interface Props {
-	backgroundColor: string;
-	caption?: string;
-	color: "black" | "white";
-	height: number;
-	id: string;
+import type { Image } from "../types";
+
+interface Props extends Omit<Image, "url"> {
 	loading: HTMLImageElement["loading"];
-	responsiveUrl: string;
-	src: string;
-	width: number;
+	src: Image["url"];
 }
 
 const {
@@ -46,7 +41,7 @@ const {
     </figure>
 </section>
 
-<style>
+ <style>
   :root {
     --size: min(
       calc(50vw - var(--gap) * 2),

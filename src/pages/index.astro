@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ImageComponent from "../components/Image.astro";
+import ImagesList from "../components/ImagesList.astro";
 import { config } from "../config";
 import { INITIAL_IMAGES_COUNT } from "../constants";
 
@@ -24,16 +24,15 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 </script>
 
 <script>
-  const res = await fetch('/extra')
+  const res = await fetch('/extra/')
 
   if (res.ok) {
     const htmlString = await res.text()
-
     const $slot = document.getElementById('slot')
 
     if ($slot) {
       const doc = new DOMParser().parseFromString(htmlString, "text/html")
-      const content = doc.body.querySelector('* > div')
+      const content = doc.getElementById('extra')
 
       if (content) {
         $slot.insertAdjacentHTML("beforebegin", content.innerHTML);
@@ -45,9 +44,9 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   const hash = window.location.hash
 
   if (hash) {
-    const target = document.querySelector(`${hash} a`);
-    
-    (target as HTMLElement | null)?.click();
+    const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
+
+    target?.click();
   }
 </script>
 
@@ -59,37 +58,8 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
     </div>
   </header>
 
-  {
-    images?.map(
-      (
-        {
-          backgroundColor,
-          caption,
-          color,
-          height,
-          id,
-          responsiveUrl,
-          url,
-          width,
-        },
-        index
-      ) => {
-        return (
-          <ImageComponent
-            backgroundColor={backgroundColor}
-            caption={caption}
-            color={color}
-            height={height}
-            id={id}
-            loading={index < 3 ? "eager" : "lazy"}
-            responsiveUrl={responsiveUrl}
-            src={url}
-            width={width}
-          />
-        );
-      }
-    )
-  }
+  <ImagesList images={images}/>
+
   <div id="slot"></div>
 </Layout>
 

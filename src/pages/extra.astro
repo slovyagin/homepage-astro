@@ -1,38 +1,9 @@
 ---
-import ImageComponent from "../components/Image.astro";
+import ImagesList from "../components/ImagesList.astro";
 import { INITIAL_IMAGES_COUNT } from "../constants";
 
 const images = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
 ---
-<div>
-{
-    images?.map(
-      (
-        {
-          backgroundColor,
-          caption,
-          color,
-          height,
-          id,
-          responsiveUrl,
-          url,
-          width,
-        }
-      ) => {
-        return (
-          <ImageComponent
-            backgroundColor={backgroundColor}
-            caption={caption}
-            color={color}
-            height={height}
-            id={id}
-            loading="lazy"
-            responsiveUrl={responsiveUrl}
-            src={url}
-            width={width}
-          />
-        );
-      }
-    )
-  }
+<div id="extra">
+  <ImagesList images={images} />
 </div>
