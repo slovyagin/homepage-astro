@@ -1,9 +1,8 @@
 ---
 import ImageComponent from "../components/Image.astro";
 import { INITIAL_IMAGES_COUNT } from "../constants";
-import type { Image } from "../middleware";
 
-const images: Array<Image> = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
+const images = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
 ---
 <>
 {
@@ -18,8 +17,7 @@ const images: Array<Image> = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
           responsiveUrl,
           url,
           width,
-        },
-        index
+        }
       ) => {
         return (
           <ImageComponent
@@ -28,8 +26,9 @@ const images: Array<Image> = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
             color={color}
             height={height}
             id={id}
-            loading={index === 0 ? "eager" : "lazy"}
+            loading="eager"
             responsiveUrl={responsiveUrl}
+            skipStyles
             src={url}
             width={width}
           />

@@ -8,6 +8,22 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 ---
 
 <script>
+  const res = await fetch('/extra')
+
+  if (res.ok) {
+    const htmlString = await res.text()
+    const $slot = document.getElementById('slot')
+
+    if ($slot) {
+      const doc = new DOMParser().parseFromString(htmlString, "text/html")
+
+      $slot.insertAdjacentHTML("beforebegin", doc.body.innerHTML);
+      $slot.remove();
+    }
+  }
+</script>
+
+<script>
   const mq = window.matchMedia("(width <= 40rem)");
 
   document.querySelectorAll("section a").forEach((link, index) => {
@@ -21,23 +37,6 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
       ]?.scrollIntoView();
     });
   });
-</script>
-
-<script>
-  const res = await fetch('/extra')
-
-  if (res.ok) {
-    const htmlString = await res.text()
-    const $slot = document.getElementById('slot')
-
-    if ($slot) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlString, "text/html")
-
-      $slot.insertAdjacentHTML("beforebegin", doc.body.innerHTML);
-      $slot.remove();
-    }
-  }
 </script>
 
 <Layout title={config.title}>

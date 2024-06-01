@@ -9,7 +9,9 @@ interface Props {
 	responsiveUrl: string;
 	src: string;
 	width: number;
+	skipStyles?: boolean;
 }
+
 const {
 	backgroundColor,
 	caption,
@@ -18,6 +20,7 @@ const {
 	id,
 	loading,
 	responsiveUrl,
+	skipStyles,
 	src,
 	width,
 } = Astro.props;
@@ -46,7 +49,8 @@ const {
     </figure>
 </section>
 
-<style>
+{
+  !skipStyles  ? <style>
   :root {
     --size: min(
       calc(50vw - var(--gap) * 2),
@@ -98,7 +102,6 @@ const {
       padding-block-end: calc(var(--gap) * 4);
       padding: calc(var(--gap) * 0.5);
       place-content: center;
-
     }
   }
 
@@ -138,7 +141,8 @@ const {
     opacity: 0.75;
     padding-inline: calc(var(--gap) * 0.125);
     text-align: end;
-    -webkit-user-select: text;
     user-select: text;
+    -webkit-user-select: text;
   }
-</style>
+</style> : null
+}
