@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 export interface Image {
   backgroundColor: string;
   caption: string;
-  color: string;
+  color: "black" | "white";
   height: number;
   id: string;
   responsiveUrl: string;
@@ -67,7 +67,7 @@ if (import.meta.env.MODE === "production") {
       const image = {
         backgroundColor: color,
         caption: res.image_metadata.Description ?? null,
-        color: invertColor(color) ? "black" : "white",
+        color: invertColor(color) ? "black" : ("white" as "black" | "white"),
         height: res.height,
         id: res.image_metadata.Description
           ? `${res.image_metadata.Description.toLowerCase()
@@ -139,7 +139,7 @@ if (import.meta.env.MODE === "production") {
   // @ts-ignore
   const { default: $images } = await import("./sample-images.json");
 
-  images = $images;
+  images = $images as Array<Image>;
 }
 
 function shuffle<T>(array: T[]) {

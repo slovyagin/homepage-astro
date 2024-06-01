@@ -6,7 +6,7 @@ declare namespace App {
     images: Array<{
       backgroundColor: string;
       caption: string;
-      color: string;
+      color: "black" | "white";
       height: number;
       id: string;
       responsiveUrl: string;
