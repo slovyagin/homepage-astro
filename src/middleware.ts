@@ -54,17 +54,17 @@ if (import.meta.env.MODE === "production") {
       );
 
       const color = res.colors[3][0].toLowerCase();
+      const desc = res.image_metadata.Description;
+      const assetId = res.asset_id.substring(0, 4);
 
       const image = {
         backgroundColor: color,
-        caption: res.image_metadata.Description ?? null,
+        caption: desc ?? null,
         color: invertColor(color) ? "black" : ("white" as "black" | "white"),
         height: res.height,
-        id: res.image_metadata.Description
-          ? `${res.image_metadata.Description.toLowerCase()
-              .replaceAll(", ", "-")
-              .replaceAll(" ", "-")}-${res.asset_id.substring(0, 4)}`
-          : `p-${res.asset_id.substring(0, 4)}`,
+        id: desc
+          ? `${desc.toLowerCase().replace(/, | /g, "-")}-${assetId}`
+          : `p-${assetId}`,
         responsiveUrl: proxiedUrl
           .replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
           .replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
@@ -150,8 +150,10 @@ function shuffle<T>(array: T[]) {
   return array;
 }
 
+const shuffled = shuffle(images);
+
 export const onRequest = defineMiddleware((context, next) => {
-  context.locals.images = shuffle(images);
+  context.locals.images = shuffled;
 
   return next();
 });
