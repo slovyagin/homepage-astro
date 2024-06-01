@@ -24,21 +24,18 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 </script>
 
 <script>
+  const $slot = document.getElementById('slot')
   const res = await fetch('/extra/')
 
-  if (res.ok) {
+  if (res.ok && $slot) {
     const htmlString = await res.text()
-    const $slot = document.getElementById('slot')
+    const doc = new DOMParser().parseFromString(htmlString, "text/html")
+    const $content = doc.getElementById('extra')
 
-    if ($slot) {
-      const doc = new DOMParser().parseFromString(htmlString, "text/html")
-      const content = doc.getElementById('extra')
-
-      if (content) {
-        $slot.insertAdjacentHTML("beforebegin", content.innerHTML);
-        $slot.remove();
-      }
+    if ($content) {
+      $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
     }
+    $slot.remove();
   }
 
   const hash = window.location.hash
