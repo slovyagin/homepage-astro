@@ -2,7 +2,7 @@
 interface Props {
 	backgroundColor: string;
 	caption?: string;
-	color: string;
+	color: "black" | "white";
 	height: number;
 	id: string;
 	loading: HTMLImageElement["loading"];
@@ -25,7 +25,6 @@ const {
 ---
 
 <section
-  class={color}
   data-background={backgroundColor ?? "transparent"}
   id={id}
   style={`background-color: ${backgroundColor ?? "transparent"}`}
@@ -43,7 +42,7 @@ const {
           />
         </picture>
       </a>
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      {caption ? <figcaption class={color === "black" ? 'black' : null}>{caption}</figcaption> : null}
     </figure>
 </section>
 
@@ -79,10 +78,6 @@ const {
     padding: var(--gap);
     scroll-snap-align: start;
     text-transform: uppercase;
-
-    &.black {
-      color: var(--black);
-    }
 
     &:target {
 	    animation-duration: 5s;
@@ -140,5 +135,8 @@ const {
     text-align: end;
     user-select: text;
     -webkit-user-select: text;
+    &.black {
+      color: var(--black);
+    }
   }
 </style>
