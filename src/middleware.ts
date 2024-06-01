@@ -28,8 +28,9 @@ if (import.meta.env.MODE === "production") {
       prefix: "photos",
       type: "upload",
     });
-    console.log("\nImages fetched successfully\n");
+    console.log("\nImages fetched\n");
 
+    console.log("Applying Cloudinary transformations...\n");
     for await (const item of resources) {
       const res = await cloudinary.api.resource(item.public_id, {
         colors: true,
@@ -74,6 +75,7 @@ if (import.meta.env.MODE === "production") {
 
       images.push(image);
     }
+    console.log("Transformations applied\n");
   } catch (error) {
     console.error(error);
     process.exit(1);
