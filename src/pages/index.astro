@@ -41,6 +41,14 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
       }
     }
   }
+
+  const hash = window.location.hash
+
+  if (hash) {
+    const target = document.querySelector(`${hash} a`);
+    
+    target?.click();
+  }
 </script>
 
 <Layout title={config.title}>
