@@ -8,10 +8,10 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 ---
 
 <script>
-  const $slot = document.getElementById('slot');
+  const $slot = document.getElementById("slot");
   const res = await fetch('/extra/');
   const mq = window.matchMedia("(width <= 40rem)");
-
+  const hash = window.location.hash
 
   if (res.ok && $slot) {
     const htmlString = await res.text()
@@ -26,11 +26,8 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
     document.querySelectorAll<HTMLAnchorElement>("section a").forEach((link, index) => {
       const prev = index % 2
 
-      if (link) {
+      if (link && !mq.matches) {
         link.addEventListener("click", (event) => {
-          if (mq.matches) {
-            return;
-          }
           event.preventDefault();
           link.closest('section')?.[
             prev ? "previousElementSibling" : "nextElementSibling"
@@ -41,8 +38,6 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
     });
   }
 
-  const hash = window.location.hash
-
   if (hash) {
     const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
 
@@ -52,10 +47,13 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 
 <Layout title={config.title}>
   <header>
-    <div>
-      {config.title ? <h1>{config.title}</h1> : null}
-      {config.description ? <p>{config.description}</p> : null}
-    </div>
+    {
+    config.title || config.description
+    ? <div>
+        {config.title ? <h1>{config.title}</h1> : null}
+        {config.description ? <p>{config.description}</p> : null}
+      </div> : null
+    }
   </header>
 
   <ImagesList images={images}/>
