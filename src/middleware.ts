@@ -96,7 +96,7 @@ if (import.meta.env.MODE === "production") {
     });
     console.timeEnd("Fetching images from Cloudinary");
 
-    const hash = createHash("sha256");
+    const hash = createHash("sha1");
     hash.update(JSON.stringify(resources));
     const digestedHash = hash.digest("hex");
     if (kvHash === digestedHash) {
