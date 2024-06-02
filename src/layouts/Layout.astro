@@ -6,10 +6,11 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const count = Astro.locals.images.length ?? 0;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-count={count}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
