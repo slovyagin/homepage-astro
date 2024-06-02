@@ -8,7 +8,7 @@ import { CLOUDFLARE_API_URL } from "./constants";
 
 let images: Array<Image> = [];
 const BASELINE_SIZE = 1400;
-const RESPONSIVE_SIZE = 900;
+const RESPONSIVE_SIZE = 700;
 const CLOUDINARY_API_KEY =
   import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET =
