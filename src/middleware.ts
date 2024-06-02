@@ -4,6 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import type { Image } from "./types";
 import { invertColor } from "./middleware/invert-color";
 import { shuffle } from "./middleware/shuffle";
+import { CLOUDFLARE_API_URL } from "./constants";
 
 let images: Array<Image> = [];
 const BASELINE_SIZE = 1400;
@@ -14,6 +15,9 @@ const CLOUDINARY_API_SECRET =
   import.meta.env.CLOUDINARY_API_SECRET ?? process.env.CLOUDINARY_API_SECRET;
 const CLOUDINARY_CLOUD_NAME =
   import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_FOLDER_PREFIX =
+  import.meta.env.CLOUDINARY_FOLDER_PREFIX ??
+  process.env.CLOUDINARY_FOLDER_PREFIX;
 const CLOUDFLARE_ACCOUNT_ID =
   import.meta.env.CLOUDFLARE_ACCOUNT_ID ?? process.env.CLOUDFLARE_ACCOUNT_ID;
 const CLOUDFLARE_RESOURCES_KV_ID =
@@ -32,7 +36,7 @@ const CLOUDFLARE_RESOURCES_KV_BEARER =
 console.time("Reading Cloudflare KV...\n");
 const [kvHash, kvImages] = await Promise.all([
   fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME}`,
+    `${CLOUDFLARE_API_URL}/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME}`,
     {
       method: "GET",
       headers: {
@@ -42,7 +46,7 @@ const [kvHash, kvImages] = await Promise.all([
     }
   ).then((res) => res.text()),
   fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_KV_KEY_NAME}`,
+    `${CLOUDFLARE_API_URL}/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_KV_KEY_NAME}`,
     {
       method: "GET",
       headers: {
@@ -68,7 +72,7 @@ if (import.meta.env.MODE === "production") {
       context: true,
       max_results: 500,
       metadata: true,
-      prefix: "photos",
+      prefix: CLOUDINARY_FOLDER_PREFIX,
       type: "upload",
     });
     console.timeEnd("Fetching images from Cloudinary...\n");
@@ -76,23 +80,19 @@ if (import.meta.env.MODE === "production") {
     const hash = createHash("sha256");
     hash.update(JSON.stringify(resources));
     const digestedHash = hash.digest("hex");
-
-    console.log({
-      kvHash,
-      digestedHash,
-    });
-
     if (kvHash === digestedHash) {
       console.log("Cloudflare KV is up to date\n");
       images = kvImages;
     } else {
+      console.log("Cloudflare KV is outdated\n");
+      console.log("kvHash", kvHash);
+      console.log("digestedHash", digestedHash);
       console.time("Applying Cloudinary transformations...\n");
       for await (const item of resources) {
         const res = await cloudinary.api.resource(item.public_id, {
           colors: true,
           image_metadata: true,
         });
-
         const url = cloudinary.url(res.public_id, {
           crop: "fit",
           format: "avif",
@@ -100,16 +100,13 @@ if (import.meta.env.MODE === "production") {
           quality: "auto",
           width: BASELINE_SIZE,
         });
-
         const proxiedUrl = url.replace(
           `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/`,
           "https://images.slovyagin.com/upload/"
         );
-
         const color = res.colors[3][0].toLowerCase();
         const desc = res.image_metadata.Description;
         const assetId = res.asset_id.substring(0, 4);
-
         const image = {
           backgroundColor: color,
           caption: desc ?? null,
@@ -131,9 +128,8 @@ if (import.meta.env.MODE === "production") {
       console.timeEnd("Applying Cloudinary transformations...\n");
 
       console.time("Updating Cloudflare KV...\n");
-
-      const r = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/bulk`,
+      const kvBulk = await fetch(
+        `${CLOUDFLARE_API_URL}/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/bulk`,
         {
           method: "PUT",
           headers: {
@@ -152,8 +148,8 @@ if (import.meta.env.MODE === "production") {
           ]),
         }
       );
-      console.log(await r.json());
       console.timeEnd("Updating Cloudflare KV...\n");
+      console.log(await kvBulk.json());
     }
   } catch (error) {
     console.error(error);
