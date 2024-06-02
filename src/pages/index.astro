@@ -8,24 +8,10 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 ---
 
 <script>
+  const $slot = document.getElementById('slot');
+  const res = await fetch('/extra/');
   const mq = window.matchMedia("(width <= 40rem)");
 
-  document.querySelectorAll("section a").forEach((link, index) => {
-    link?.addEventListener("click", (event) => {
-      if (mq.matches) {
-        return;
-      }
-      event.preventDefault();
-      link.closest('section')?.[
-        index % 2 ? "previousElementSibling" : "nextElementSibling"
-      ]?.scrollIntoView();
-    });
-  });
-</script>
-
-<script>
-  const $slot = document.getElementById('slot')
-  const res = await fetch('/extra/')
 
   if (res.ok && $slot) {
     const htmlString = await res.text()
@@ -36,6 +22,23 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
       $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
     }
     $slot.remove();
+
+    document.querySelectorAll<HTMLAnchorElement>("section a").forEach((link, index) => {
+      const prev = index % 2
+
+      if (link) {
+        link.addEventListener("click", (event) => {
+          if (mq.matches) {
+            return;
+          }
+          event.preventDefault();
+          link.closest('section')?.[
+            prev ? "previousElementSibling" : "nextElementSibling"
+          ]?.scrollIntoView();
+        });
+        link.style.cursor = prev ? "w-resize": "e-resize";
+      }
+    });
   }
 
   const hash = window.location.hash

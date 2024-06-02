@@ -4,9 +4,10 @@ import type { Image } from "../types";
 
 interface Props {
 	images: Array<Image>;
+	loading?: HTMLImageElement["loading"];
 }
 
-const { images } = Astro.props;
+const { images, loading = "eager" } = Astro.props;
 ---
 
 <>
@@ -31,7 +32,7 @@ const { images } = Astro.props;
             color={color}
             height={height}
             id={id}
-            loading="lazy"
+            loading={loading}
             responsiveUrl={responsiveUrl}
             src={url}
             width={width}
