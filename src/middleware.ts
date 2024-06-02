@@ -7,8 +7,9 @@ import { shuffle } from "./middleware/shuffle";
 import { CLOUDFLARE_API_URL } from "./constants";
 
 let images: Array<Image> = [];
-const BASELINE_SIZE = 1400;
-const RESPONSIVE_SIZE = 700;
+const MOBILE_SIZE = 700;
+const BASELINE_SIZE = 900;
+const LARGE_SIZE = 1400;
 const CLOUDINARY_API_KEY =
   import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET =
@@ -97,7 +98,7 @@ if (import.meta.env.MODE === "production") {
     console.timeEnd("Fetching images from Cloudinary");
 
     const hash = createHash("sha1");
-    hash.update(`${JSON.stringify(resources)}${JSON.stringify(kvImages)}`);
+    hash.update(JSON.stringify({ resources, kvImages }));
     const digestedHash = hash.digest("hex");
     if (kvHash === digestedHash) {
       console.log("Cloudflare KV is up to date");
@@ -137,9 +138,13 @@ if (import.meta.env.MODE === "production") {
           id: caption
             ? `${caption.toLowerCase().replace(/, | /g, "-")}-${assetId}`
             : `p-${assetId}`,
-          responsiveUrl: proxiedUrl
-            .replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
-            .replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
+          mobileUrl: proxiedUrl
+            .replaceAll(`,w_${BASELINE_SIZE}`, `,w_${MOBILE_SIZE}`)
+            .replaceAll(`,h_${BASELINE_SIZE}`, `,h_${MOBILE_SIZE}`)
+            .replaceAll(",", "%2C"),
+          largeUrl: proxiedUrl
+            .replaceAll(`,w_${BASELINE_SIZE}`, `,w_${LARGE_SIZE}`)
+            .replaceAll(`,h_${BASELINE_SIZE}`, `,h_${LARGE_SIZE}`)
             .replaceAll(",", "%2C"),
           url: proxiedUrl.replaceAll(",", "%2C"),
           width: res.width,
@@ -165,9 +170,7 @@ if (import.meta.env.MODE === "production") {
             },
             {
               key: CLOUDFLARE_IMAGES_KV_KEY_NAME,
-              value: JSON.stringify(
-                `${JSON.stringify(resources)}${JSON.stringify(kvImages)}`
-              ),
+              value: JSON.stringify(images),
             },
           ]),
         }

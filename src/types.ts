@@ -4,7 +4,8 @@ export interface Image {
   color: "black" | "white";
   height: number;
   id: string;
-  responsiveUrl: string;
+  largeUrl: string;
+  mobileUrl: string;
   url: string;
   width: number;
 }

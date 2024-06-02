@@ -1,9 +1,8 @@
 ---
 import type { Image } from "../types";
 
-interface Props extends Omit<Image, "url"> {
+interface Props extends Image {
 	loading: HTMLImageElement["loading"];
-	src: Image["url"];
 }
 
 const {
@@ -12,9 +11,10 @@ const {
 	color,
 	height,
 	id,
+	largeUrl,
 	loading,
-	responsiveUrl,
-	src,
+	mobileUrl,
+	url,
 	width,
 } = Astro.props;
 ---
@@ -27,12 +27,13 @@ const {
   <figure>
       <a href={`#${id}`}>
         <picture>
-          <source srcset={responsiveUrl} media="(max-width: 50rem)" />
+          <source srcset={mobileUrl} media="(max-width: 50rem)" />
+          <source srcset={largeUrl} media="(min-width: 105rem)" />
           <img
             alt=""
             height={~~(height * 0.52)}
             loading={loading}
-            src={src}
+            src={url}
             width={~~(width * 0.52)}
           />
         </picture>

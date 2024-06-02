@@ -20,7 +20,8 @@ const { images, loading = "eager" } = Astro.props;
           color,
           height,
           id,
-          responsiveUrl,
+          largeUrl,
+          mobileUrl,
           url,
           width,
         }
@@ -32,9 +33,10 @@ const { images, loading = "eager" } = Astro.props;
             color={color}
             height={height}
             id={id}
+            largeUrl={largeUrl}
             loading={loading}
-            responsiveUrl={responsiveUrl}
-            src={url}
+            mobileUrl={mobileUrl}
+            url={url}
             width={width}
           />
         );
