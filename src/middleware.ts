@@ -50,7 +50,7 @@ const [kvHash, kvImages] = await Promise.all([
         Authorization: `Bearer ${CLOUDFLARE_RESOURCES_KV_BEARER}`,
       },
     }
-  ).then((res) => res.json()),
+  ).then<Array<Image>>((res) => res.json()),
 ]);
 console.timeEnd("Reading Cloudflare KV...\n");
 
@@ -160,9 +160,7 @@ if (import.meta.env.MODE === "production") {
     process.exit(1);
   }
 } else {
-  const { default: sampleImages } = await import("./sample-images.json");
-
-  images = sampleImages as Array<Image>;
+  images = kvImages;
 }
 
 const shuffled = shuffle(images);
