@@ -218,9 +218,11 @@ function shuffle<T>(array: T[]) {
   return array;
 }
 
+const shuffled = shuffle(images);
+
 export const onRequest = defineMiddleware((context, next) => {
   if (!context.locals.images) {
-    context.locals.images = shuffle(images);
+    context.locals.images = shuffled;
   }
 
   return next();
