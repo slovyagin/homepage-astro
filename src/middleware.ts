@@ -8,7 +8,7 @@ import { CLOUDFLARE_API_URL } from "./constants";
 
 let images: Array<Image> = [];
 const BASELINE_SIZE = 1400;
-const RESPONSIVE_SIZE = 1100;
+const RESPONSIVE_SIZE = 900;
 const CLOUDINARY_API_KEY =
   import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET =
@@ -97,15 +97,17 @@ if (import.meta.env.MODE === "production") {
     console.timeEnd("Fetching images from Cloudinary");
 
     const hash = createHash("sha1");
-    hash.update(JSON.stringify(resources));
+    hash.update(`${JSON.stringify(resources)}${JSON.stringify(kvImages)}`);
     const digestedHash = hash.digest("hex");
     if (kvHash === digestedHash) {
       console.log("Cloudflare KV is up to date");
       images = kvImages;
     } else {
-      console.log("kvHash", kvHash);
-      console.log("digestedHash", digestedHash);
-      console.log("Cloudflare KV is outdated");
+      if (kvHash !== digestedHash) {
+        console.log("kvHash", kvHash);
+        console.log("digestedHash", digestedHash);
+        console.log("Cloudflare KV is outdated");
+      }
 
       console.time("Applying Cloudinary transformations");
       for await (const item of resources) {
@@ -163,7 +165,9 @@ if (import.meta.env.MODE === "production") {
             },
             {
               key: CLOUDFLARE_IMAGES_KV_KEY_NAME,
-              value: JSON.stringify(images),
+              value: JSON.stringify(
+                `${JSON.stringify(resources)}${JSON.stringify(kvImages)}`
+              ),
             },
           ]),
         }
