@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { defineMiddleware } from "astro:middleware";
 import { v2 as cloudinary } from "cloudinary";
 import type { Image } from "./types";
@@ -5,17 +6,53 @@ import type { Image } from "./types";
 let images: Array<Image> = [];
 const BASELINE_SIZE = 1400;
 const RESPONSIVE_SIZE = 1100;
+const CLOUDINARY_API_KEY =
+  import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET =
+  import.meta.env.CLOUDINARY_API_SECRET ?? process.env.CLOUDINARY_API_SECRET;
+const CLOUDINARY_CLOUD_NAME =
+  import.meta.env.CLOUDINARY_CLOUD_NAME ?? process.env.CLOUDINARY_CLOUD_NAME;
+const CLOUDFLARE_ACCOUNT_ID =
+  import.meta.env.CLOUDFLARE_ACCOUNT_ID ?? process.env.CLOUDFLARE_ACCOUNT_ID;
+const CLOUDFLARE_RESOURCES_KV_ID =
+  import.meta.env.CLOUDFLARE_RESOURCES_KV_ID ??
+  process.env.CLOUDFLARE_RESOURCES_KV_ID;
+const CLOUDFLARE_RESOURCES_KV_KEY_NAME =
+  import.meta.env.CLOUDFLARE_RESOURCES_KV_KEY_NAME ??
+  process.env.CLOUDFLARE_RESOURCES_KV_KEY_NAME;
+const CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME =
+  import.meta.env.CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME ??
+  process.env.CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME;
+const CLOUDFLARE_RESOURCES_KV_BEARER =
+  import.meta.env.CLOUDFLARE_RESOURCES_KV_BEARER ??
+  process.env.CLOUDFLARE_RESOURCES_KV_BEARER;
+
+const kvHash = await fetch(
+  `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME}`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${CLOUDFLARE_RESOURCES_KV_BEARER}`,
+    },
+  }
+).then((res) => res.text());
+const kvImages = await fetch(
+  `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_KV_KEY_NAME}`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${CLOUDFLARE_RESOURCES_KV_BEARER}`,
+    },
+  }
+).then((res) => res.json());
 
 if (import.meta.env.MODE === "production") {
   cloudinary.config({
-    api_key:
-      import.meta.env.CLOUDINARY_API_KEY ?? process.env.CLOUDINARY_API_KEY,
-    api_secret:
-      import.meta.env.CLOUDINARY_API_SECRET ??
-      process.env.CLOUDINARY_API_SECRET,
-    cloud_name:
-      import.meta.env.CLOUDINARY_CLOUD_NAME ??
-      process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: CLOUDINARY_API_KEY,
+    api_secret: CLOUDINARY_API_SECRET,
+    cloud_name: CLOUDINARY_CLOUD_NAME,
     secure: true,
   });
 
@@ -30,52 +67,83 @@ if (import.meta.env.MODE === "production") {
     });
     console.log("\nImages fetched\n");
 
-    console.log("Applying Cloudinary transformations...\n");
-    for await (const item of resources) {
-      const res = await cloudinary.api.resource(item.public_id, {
-        colors: true,
-        image_metadata: true,
-      });
+    const hash = createHash("sha256");
+    hash.update(JSON.stringify(resources));
+    const digestedHash = hash.digest("hex");
 
-      const url = cloudinary.url(res.public_id, {
-        crop: "fit",
-        format: "avif",
-        height: BASELINE_SIZE,
-        quality: "auto",
-        width: BASELINE_SIZE,
-      });
+    if (kvHash === digestedHash) {
+      console.log("Cloudflare KV is up to date\n");
+      images = kvImages;
+    } else {
+      console.log("Applying Cloudinary transformations...\n");
+      for await (const item of resources) {
+        const res = await cloudinary.api.resource(item.public_id, {
+          colors: true,
+          image_metadata: true,
+        });
 
-      const proxiedUrl = url.replace(
-        `https://res.cloudinary.com/${
-          import.meta.env.CLOUDINARY_CLOUD_NAME ??
-          process.env.CLOUDINARY_CLOUD_NAME
-        }/image/upload/`,
-        "https://images.slovyagin.com/upload/"
+        const url = cloudinary.url(res.public_id, {
+          crop: "fit",
+          format: "avif",
+          height: BASELINE_SIZE,
+          quality: "auto",
+          width: BASELINE_SIZE,
+        });
+
+        const proxiedUrl = url.replace(
+          `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/`,
+          "https://images.slovyagin.com/upload/"
+        );
+
+        const color = res.colors[3][0].toLowerCase();
+        const desc = res.image_metadata.Description;
+        const assetId = res.asset_id.substring(0, 4);
+
+        const image = {
+          backgroundColor: color,
+          caption: desc ?? null,
+          color: invertColor(color) ? "black" : ("white" as "black" | "white"),
+          height: res.height,
+          id: desc
+            ? `${desc.toLowerCase().replace(/, | /g, "-")}-${assetId}`
+            : `p-${assetId}`,
+          responsiveUrl: proxiedUrl
+            .replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
+            .replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
+            .replaceAll(",", "%2C"),
+          url: proxiedUrl.replaceAll(",", "%2C"),
+          width: res.width,
+        };
+
+        images.push(image);
+      }
+      console.log("Transformations applied\n");
+
+      console.log("Updating Cloudflare KV...\n");
+      await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${CLOUDFLARE_RESOURCES_KV_BEARER}`,
+          },
+          body: digestedHash,
+        }
       );
-
-      const color = res.colors[3][0].toLowerCase();
-      const desc = res.image_metadata.Description;
-      const assetId = res.asset_id.substring(0, 4);
-
-      const image = {
-        backgroundColor: color,
-        caption: desc ?? null,
-        color: invertColor(color) ? "black" : ("white" as "black" | "white"),
-        height: res.height,
-        id: desc
-          ? `${desc.toLowerCase().replace(/, | /g, "-")}-${assetId}`
-          : `p-${assetId}`,
-        responsiveUrl: proxiedUrl
-          .replaceAll(`,w_${BASELINE_SIZE}`, `,w_${RESPONSIVE_SIZE}`)
-          .replaceAll(`,h_${BASELINE_SIZE}`, `,h_${RESPONSIVE_SIZE}`)
-          .replaceAll(",", "%2C"),
-        url: proxiedUrl.replaceAll(",", "%2C"),
-        width: res.width,
-      };
-
-      images.push(image);
+      await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/values/${CLOUDFLARE_RESOURCES_KV_KEY_NAME}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${CLOUDFLARE_RESOURCES_KV_BEARER}`,
+          },
+          body: JSON.stringify(images),
+        }
+      );
+      console.log("Cloudflare KV updated\n");
     }
-    console.log("Transformations applied\n");
   } catch (error) {
     console.error(error);
     process.exit(1);
@@ -150,10 +218,10 @@ function shuffle<T>(array: T[]) {
   return array;
 }
 
-const shuffled = shuffle(images);
-
 export const onRequest = defineMiddleware((context, next) => {
-  context.locals.images = shuffled;
+  if (!context.locals.images) {
+    context.locals.images = shuffle(images);
+  }
 
   return next();
 });
