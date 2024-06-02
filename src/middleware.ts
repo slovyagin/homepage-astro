@@ -77,6 +77,11 @@ if (import.meta.env.MODE === "production") {
     hash.update(JSON.stringify(resources));
     const digestedHash = hash.digest("hex");
 
+    console.log({
+      kvHash,
+      digestedHash,
+    });
+
     if (kvHash === digestedHash) {
       console.log("Cloudflare KV is up to date\n");
       images = kvImages;
@@ -126,7 +131,8 @@ if (import.meta.env.MODE === "production") {
       console.timeEnd("Applying Cloudinary transformations...\n");
 
       console.time("Updating Cloudflare KV...\n");
-      await fetch(
+
+      const r = await fetch(
         `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${CLOUDFLARE_RESOURCES_KV_ID}/bulk`,
         {
           method: "PUT",
@@ -136,12 +142,17 @@ if (import.meta.env.MODE === "production") {
           },
           body: JSON.stringify([
             {
-              [CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME]: digestedHash,
-              [CLOUDFLARE_RESOURCES_KV_KEY_NAME]: JSON.stringify(images),
+              key: CLOUDFLARE_RESOURCES_HASH_KV_KEY_NAME,
+              value: digestedHash,
+            },
+            {
+              key: CLOUDFLARE_RESOURCES_KV_KEY_NAME,
+              value: JSON.stringify(images),
             },
           ]),
         }
       );
+      console.log(await r.json());
       console.timeEnd("Updating Cloudflare KV...\n");
     }
   } catch (error) {
