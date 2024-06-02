@@ -12,6 +12,31 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   const res = await fetch('/extra/');
   const mq = window.matchMedia("(width <= 40rem)");
   const hash = window.location.hash
+  const handleResponsiveNav = () => {
+      document.querySelectorAll<HTMLAnchorElement>("section a").forEach((link, index) => {
+        if (!link) {
+          return
+        };
+        const prev = index % 2;
+        const handler: EventListenerOrEventListenerObject = (event) => {
+          if (mq.matches) {
+            return
+          };
+          event.preventDefault();
+          link.closest('section')?.[
+            prev ? "previousElementSibling" : "nextElementSibling"
+          ]?.scrollIntoView();
+        };
+
+        link.addEventListener("click", handler);
+
+        if (mq.matches) {
+          link.style.cursor = "pointer";
+        } else {
+          link.style.cursor = prev ? "w-resize": "e-resize";
+        }
+      });
+    }
 
   if (res.ok && $slot) {
     const htmlString = await res.text()
@@ -22,21 +47,10 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
       $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
     }
     $slot.remove();
-
-    document.querySelectorAll<HTMLAnchorElement>("section a").forEach((link, index) => {
-      const prev = index % 2
-
-      if (link && !mq.matches) {
-        link.addEventListener("click", (event) => {
-          event.preventDefault();
-          link.closest('section')?.[
-            prev ? "previousElementSibling" : "nextElementSibling"
-          ]?.scrollIntoView();
-        });
-        link.style.cursor = prev ? "w-resize": "e-resize";
-      }
-    });
   }
+
+    handleResponsiveNav();
+    mq.addEventListener("change", handleResponsiveNav);
 
   if (hash) {
     const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
