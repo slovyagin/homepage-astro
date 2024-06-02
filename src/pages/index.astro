@@ -9,9 +9,8 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 
 <script>
   const $slot = document.getElementById("slot");
-  const res = await fetch('/extra/');
   const mq = window.matchMedia("(width <= 40rem)");
-  const hash = window.location.hash
+  const {hash} = window.location
   const handleResponsiveNav = () => {
       document.querySelectorAll<HTMLAnchorElement>("section a").forEach((link, index) => {
         if (!link) {
@@ -37,6 +36,7 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
         }
       });
     }
+  const res = await fetch('/extra/');
 
   if (res.ok && $slot) {
     const htmlString = await res.text()
@@ -47,15 +47,13 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
       $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
     }
     $slot.remove();
-  }
-
     handleResponsiveNav();
     mq.addEventListener("change", handleResponsiveNav);
 
-  if (hash) {
-    const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
-
-    target?.click();
+    if (hash) {
+      const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
+      target?.click();
+   }
   }
 </script>
 
