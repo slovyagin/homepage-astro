@@ -12,11 +12,12 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   const mq = window.matchMedia("(width <= 40rem)");
   const {hash} = window.location
   const handleResponsiveNav = () => {
-      document.querySelectorAll<HTMLAnchorElement>("section a").forEach((link, index) => {
+      const $links = document.querySelectorAll<HTMLAnchorElement>("section a")
+      $links?.forEach((link, index) => {
         if (!link) {
           return
         };
-        const prev = index % 2;
+        const prev = !!(index % 2);
         const handler: EventListenerOrEventListenerObject = (event) => {
           if (mq.matches) {
             return
@@ -32,7 +33,7 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
         if (mq.matches) {
           link.style.cursor = "pointer";
         } else {
-          link.style.cursor = prev ? "w-resize": "e-resize";
+          link.style.cursor = index === $links.length - 1 ? "default" : prev ? "w-resize" : "e-resize";
         }
       });
     }
