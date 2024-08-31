@@ -78,7 +78,7 @@ const {
     &:target {
 	    animation-duration: 5s;
 	    animation-name: target;
-      animation-timing-function: ease;
+        animation-timing-function: ease;
     }
   }
 
@@ -93,10 +93,25 @@ const {
     }
   }
 
-  section a {
-    display: inline-block;
-    text-decoration: none;
+  section {
+    &:nth-child(odd) a {
+      cursor: w-resize
+    }
+
+    &:nth-child(even) a {
+      cursor: e-resize
+    }
+
+    &:last-child a {
+      cursor: default
+    }
   }
+
+  @media (width <= 40rem) {
+      section a:link {
+        cursor: pointer
+      }
+    }
 
   picture {
     width: fit-content;

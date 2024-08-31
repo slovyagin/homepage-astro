@@ -29,12 +29,6 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
         };
 
         link.addEventListener("click", handler);
-
-        if (mq.matches) {
-          link.style.cursor = "pointer";
-        } else {
-          link.style.cursor = index === $links.length - 1 ? "default" : prev ? "w-resize" : "e-resize";
-        }
       });
     }
   const res = await fetch('/extra/');
