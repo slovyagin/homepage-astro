@@ -5,7 +5,6 @@ import { config } from "../config";
 import { INITIAL_IMAGES_COUNT } from "../constants";
 
 const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
-const bg = images[0].backgroundColor ?? "#fff";
 const color = images[0].color ?? "#fff";
 ---
 
@@ -71,7 +70,7 @@ const color = images[0].color ?? "#fff";
 </Layout>
 
 
-<style define:vars={{ color, bg }}>
+<style define:vars={{ color }}>
   body {
     display: grid;
     grid-template-columns: calc(var(--size) + var(--gap) * 2) 1fr;
