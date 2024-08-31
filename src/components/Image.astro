@@ -72,7 +72,6 @@ const {
     min-height: min(70vw, 100vh);
     padding: var(--gap);
     scroll-snap-align: start;
-    text-transform: uppercase;
     position: relative;
     z-index: 2;
 
@@ -114,14 +113,12 @@ const {
       }
     }
 
-  picture {
-    width: fit-content;
-  }
 
   figure {
     display: grid;
-    gap: calc(var(--gap) * 0.5);
+    gap: calc(var(--gap) * 1/4);
     margin: 0;
+    width: fit-content;
   }
 
   img {
@@ -141,12 +138,14 @@ const {
   }
 
   figcaption {
-    font-size: clamp(0.65rem, 0.65vw, 0.8rem);
     margin: 0;
     opacity: 0.75;
-    padding-inline: calc(var(--gap) * 1/8);
+    padding-inline: calc(var(--gap) * 1/4);
     user-select: text;
     -webkit-user-select: text;
+    color: var(--white);
+    font-size: 0.9rem;
+    text-align: end;
 
     &.black {
       color: var(--black);

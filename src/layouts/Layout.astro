@@ -1,5 +1,5 @@
 ---
-import { config } from "../config";
+import { config, FF_META_PRO_URL } from "../config";
 
 interface Props {
 	title: string;
@@ -43,7 +43,7 @@ const count = Astro.locals.images.length ?? 0;
       rel="preload"
       as="font"
       crossorigin
-      href="/CooperHewittBook.woff2"
+      href={FF_META_PRO_URL}
       type="font/woff2"
     />
 
@@ -63,33 +63,35 @@ const count = Astro.locals.images.length ?? 0;
   }
 
   @font-face {
-    font-family: "Cooper Hewitt";
-    font-weight: normal;
-    src:
-      local("Cooper Hewitt"),
-      url("/CooperHewittBook.woff2") format("woff2");
-    font-display: swap;
-    unicode-range: U+20-5F, U+61-7A, U+7C, U+A0, U+A7, U+A9, U+2010-2011,
-      U+2013-2014, U+2018-2019, U+201C-201D, U+2020-2021, U+2026, U+2030,
-      U+2032-2033, U+20AC;
+      font-family: FF Meta Web Pro Condensed;
+      src: url(https://use.typekit.net/af/271842/0000000000000000000175cf/27/l?primer=a6f5ed45567faadc7e0db47bdc53158db04cfed654edd51683b1b64d3d3ffecb&fvd=n6&v=3) format("woff2");
+      font-display: auto;
+      font-style: normal;
+      font-weight: 600;
+      font-stretch: normal;
   }
 
   *,
   ::before,
   ::after {
+    font-family:
+        FF Meta Web Pro Condensed,
+        system-ui,
+        sans-serif;
     box-sizing: border-box;
     position: relative;
+    font-size: max(1vw, 1rem);
+    font-kerning: normal;
+    font-variant-numeric: lining-nums;
+    -moz-font-feature-settings: "lnum";
+    -webkit-font-feature-settings: "lnum";
+    font-feature-settings: "lnum";
   }
 
   html {
-    background-color: var(--black);
-    color: var(--white);
+    background-color: #949f8d;
+    color: var(--black);
     scroll-snap-type: y mandatory;
-    font-family:
-      Cooper Hewitt,
-      system-ui,
-      sans-serif;
-    letter-spacing: 0.1em;
     line-height: 1.375;
     -webkit-user-select: none;
     user-select: none;
