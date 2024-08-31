@@ -55,6 +55,19 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
   </body>
 </html>
 
+<style is:global set:html={
+  `
+  @font-face {
+      font-family: FF Meta Web Pro Condensed;
+      src: url(${FF_META_PRO_URL}) format("woff2");
+      font-display: auto;
+      font-style: normal;
+      font-weight: 600;
+      font-stretch: normal;
+    }
+  `
+}></style>
+
 <style is:global define:vars={{ bg }}>
   :root {
     --black: #16161d;
@@ -62,15 +75,6 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
     --slime: #cffc50;
     --gap: 1rem;
     --max-size: 80rem;
-  }
-
-  @font-face {
-      font-family: FF Meta Web Pro Condensed;
-      src: url(https://use.typekit.net/af/271842/0000000000000000000175cf/27/l?primer=a6f5ed45567faadc7e0db47bdc53158db04cfed654edd51683b1b64d3d3ffecb&fvd=n6&v=3) format("woff2");
-      font-display: auto;
-      font-style: normal;
-      font-weight: 600;
-      font-stretch: normal;
   }
 
   *,
