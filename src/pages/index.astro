@@ -5,6 +5,8 @@ import { config } from "../config";
 import { INITIAL_IMAGES_COUNT } from "../constants";
 
 const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
+const bg = images[0].backgroundColor ?? "#fff";
+const color = images[0].color ?? "#fff";
 ---
 
 <script>
@@ -68,7 +70,7 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   <div id="slot"></div>
 </Layout>
 
-<style>
+<style define:vars={{ color, bg }}>
   body {
     display: grid;
     grid-template-columns: calc(var(--size) + var(--gap) * 2) 1fr;
@@ -87,6 +89,11 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
   header {
     padding: var(--gap);
     scroll-snap-align: start;
+    background-color: var(--bg);
+    color: var(--color);
+    text-align: center;
+    display: grid;
+    place-content: center;
 
     > div {
       position: sticky;

@@ -53,6 +53,7 @@ const count = Astro.locals.images.length ?? 0;
     <slot />
   </body>
 </html>
+
 <style is:global>
   :root {
     --black: #16161d;
@@ -89,7 +90,7 @@ const count = Astro.locals.images.length ?? 0;
   }
 
   html {
-    background-color: #949f8d;
+    background-color: var(--white);
     color: var(--black);
     scroll-snap-type: y mandatory;
     line-height: 1.375;
