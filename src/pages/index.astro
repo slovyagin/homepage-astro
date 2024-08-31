@@ -71,10 +71,9 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 <style>
   body {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: calc(var(--size) + var(--gap) * 2) 1fr;
 
     > *:nth-child(odd) {
-      min-width: var(--size);
       max-width: var(--max-size);
     }
   }
@@ -106,7 +105,9 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 
   @media (width <= 40rem) {
     header {
-      min-height: 30vh;
+      position: sticky;
+      top: 0px;
+      z-index: 2;
     }
   }
 </style>
