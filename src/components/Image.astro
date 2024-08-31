@@ -28,7 +28,8 @@ const {
       <a href={`#${id}`}>
         <picture>
           <source srcset={mobileUrl} media="(max-width: 50rem)" />
-          <source srcset={largeUrl} media="(min-width: 105rem)" />
+          <source srcset={url} media="(min-width: 100rem)" />
+          <source srcset={largeUrl} media="(min-width: 140rem)" />
           <img
             alt=""
             height={~~(height * 0.52)}
