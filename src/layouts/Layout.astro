@@ -7,6 +7,7 @@ interface Props {
 
 const { title } = Astro.props;
 const count = Astro.locals.images.length ?? 0;
+const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
 ---
 
 <!doctype html>
@@ -54,7 +55,7 @@ const count = Astro.locals.images.length ?? 0;
   </body>
 </html>
 
-<style is:global>
+<style is:global define:vars={{ bg }}>
   :root {
     --black: #16161d;
     --white: #fefafc;
@@ -90,7 +91,7 @@ const count = Astro.locals.images.length ?? 0;
   }
 
   html {
-    background-color: var(--white);
+    background-color: var(--bg);
     color: var(--black);
     scroll-snap-type: y mandatory;
     line-height: 1.375;

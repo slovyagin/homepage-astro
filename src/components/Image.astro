@@ -73,8 +73,19 @@ const {
     padding: var(--gap);
     scroll-snap-align: start;
     position: relative;
-    z-index: 2;
     align-items: center;
+
+    @media (width <= 40rem) {
+        & {
+            z-index: 3;
+        }
+
+        &:first-of-type {
+            z-index: 1;
+        }
+    }
+
+
 
     &:target {
 	    animation-duration: 5s;
@@ -118,7 +129,7 @@ const {
 
   figure {
     display: grid;
-    gap: calc(var(--gap) * 1/4);
+    gap: calc(var(--gap) * 1/5);
     margin: 0;
     width: fit-content;
   }

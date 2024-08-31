@@ -70,6 +70,7 @@ const color = images[0].color ?? "#fff";
   <div id="slot"></div>
 </Layout>
 
+
 <style define:vars={{ color, bg }}>
   body {
     display: grid;
@@ -89,7 +90,6 @@ const color = images[0].color ?? "#fff";
   header {
     padding: var(--gap);
     scroll-snap-align: start;
-    background-color: var(--bg);
     color: var(--color);
     text-align: center;
     display: grid;
@@ -106,5 +106,16 @@ const color = images[0].color ?? "#fff";
       -webkit-user-select: text;
       user-select: text;
     }
+  }
+
+  @media (width <= 40rem) {
+      header {
+          position: fixed;
+          z-index: 2;
+          top: 0px;
+          right: 0px;
+          left: 0px;
+          background-color: transparent;
+      }
   }
 </style>
