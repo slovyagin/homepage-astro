@@ -7,4 +7,4 @@ export const config = {
 };
 
 export const FF_META_PRO_URL =
-  "https://use.typekit.net/af/271842/0000000000000000000175cf/27/l?primer=a6f5ed45567faadc7e0db47bdc53158db04cfed654edd51683b1b64d3d3ffecb&fvd=n6&v=3";
+  "https://use.typekit.net/af/271842/0000000000000000000175cf/27/l?primer=388f68b35a7cbf1ee3543172445c23e26935269fadd3b392a13ac7b2903677eb&fvd=n6&v=3";
