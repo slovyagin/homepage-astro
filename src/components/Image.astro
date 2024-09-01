@@ -73,20 +73,7 @@ const {
     min-height: min(70vw, 100vh);
     padding: var(--gap);
     scroll-snap-align: start;
-    position: relative;
     align-items: center;
-
-    @media (width <= 40rem) {
-        & {
-            z-index: 3;
-        }
-
-        &:first-of-type {
-            z-index: 1;
-        }
-    }
-
-
 
     &:target {
 	    animation-duration: 5s;
@@ -130,9 +117,13 @@ const {
 
   figure {
     display: grid;
-    gap: calc(var(--gap) * 1/5);
+    gap: calc(var(--gap) * 1/4);
     margin: 0;
     width: fit-content;
+    
+    &:has(figcaption) {
+      margin-block-end: calc(-1 * (var(--gap) * 1/4 + 0.9rem));
+    }
   }
 
   picture {
@@ -158,14 +149,14 @@ const {
   }
 
   figcaption {
+    color: var(--white);
+    font-size: 0.9rem;
     margin: 0;
     opacity: 0.75;
     padding-inline: calc(var(--gap) * 1/4);
-    user-select: text;
-    -webkit-user-select: text;
-    color: var(--white);
-    font-size: 0.9rem;
     text-align: end;
+    user-select: text;
+    line-height: 1;
 
     &.black {
       color: var(--black);

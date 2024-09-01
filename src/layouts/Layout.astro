@@ -80,17 +80,15 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
   *,
   ::before,
   ::after {
+    position: relative;
     font-family:
         FF Meta Web Pro Condensed,
         system-ui,
         sans-serif;
     box-sizing: border-box;
-    position: relative;
     font-size: max(1vw, 1rem);
     font-kerning: normal;
     font-variant-numeric: lining-nums;
-    -moz-font-feature-settings: "lnum";
-    -webkit-font-feature-settings: "lnum";
     font-feature-settings: "lnum";
   }
 
@@ -99,7 +97,6 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
     color: var(--black);
     scroll-snap-type: y mandatory;
     line-height: 1.375;
-    -webkit-user-select: none;
     user-select: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
