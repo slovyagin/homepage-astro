@@ -67,13 +67,13 @@ const {
   }
 
   section {
-    place-content: center;
+    align-items: center;
     background-color: attr(data-background color);
     display: grid;
     min-height: min(70vw, 100vh);
     padding: var(--gap);
+    place-content: center;
     scroll-snap-align: start;
-    align-items: center;
 
     &:target {
 	    animation-duration: 5s;

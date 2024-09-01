@@ -1,5 +1,6 @@
 ---
-import { config, FF_META_PRO_URL } from "../config";
+import { config } from "../config";
+import { FF_META_PRO_URL } from "../constants";
 
 interface Props {
 	title: string;
@@ -66,7 +67,7 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
       font-stretch: normal;
     }
   `
-}></style>
+} />
 
 <style is:global define:vars={{ bg }}>
   :root {
@@ -88,7 +89,6 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
         system-ui,
         sans-serif;
     box-sizing: border-box;
-    font-size: max(1vw, 1rem);
     font-kerning: normal;
     font-variant-numeric: lining-nums;
     font-feature-settings: "lnum";
@@ -99,6 +99,7 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
     color: var(--black);
     scroll-snap-type: y mandatory;
     line-height: 1.375;
+    font-size: max(1vw, 1rem);
     user-select: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
