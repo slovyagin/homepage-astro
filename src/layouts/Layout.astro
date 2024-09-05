@@ -77,7 +77,8 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
     --gap: 1rem;
     --sm: 0.9rem;
     --lg: 1.2rem;
-    --max-size: 80rem;
+    --max-size: 100rem;
+    --font-size: clamp(1rem, 1vw, 1.375rem)
   }
 
   *,
@@ -99,7 +100,7 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
     color: var(--black);
     scroll-snap-type: y mandatory;
     line-height: 1.375;
-    font-size: max(1vw, 1rem);
+    font-size: var(--font-size);
     user-select: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
