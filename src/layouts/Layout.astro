@@ -100,7 +100,7 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
     color: var(--black);
     scroll-snap-type: y mandatory;
     line-height: 1.375;
-    font-size: var(--font-size);
+    font-size: 1rem;
     user-select: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -109,6 +109,7 @@ const bg = Astro.locals.images[0].backgroundColor ?? "#fff";
 
   body {
     margin: 0;
+    font-size: var(--font-size);
   }
 
   ::selection {
