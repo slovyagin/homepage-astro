@@ -27,14 +27,14 @@ const {
   <figure>
       <a href={`#${id}`}>
         <picture>
-          <source srcset={mobileUrl} media="(max-width: 800px)" />
-          <source srcset={url} media="(min-width: 1200px)" />
-          <source srcset={largeUrl} media="(min-width: 2000px)" />
+          <source srcset={mobileUrl} media="(width <= 800px)" />
+          <source srcset={url} media="(800px < width < 2000px)" />
+          <source srcset={largeUrl} media="(width >= 2000px)" />
           <img
             alt=""
             height={~~(height * 0.52)}
             loading={loading}
-            src={url}
+            src={mobileUrl}
             width={~~(width * 0.52)}
           />
         </picture>
