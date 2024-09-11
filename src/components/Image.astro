@@ -27,9 +27,9 @@ const {
   <figure>
       <a href={`#${id}`}>
         <picture>
-          <source srcset={mobileUrl} media="(width <= 800px)" />
-          <source srcset={url} media="(800px < width < 2000px)" />
-          <source srcset={largeUrl} media="(width >= 2000px)" />
+          <source srcset={mobileUrl} media="(width <= 40rem)" />
+          <source srcset={url} media="(40rem < width < 100rem)" />
+          <source srcset={largeUrl} media="(width >= 100rem)" />
           <img
             alt=""
             height={~~(height * 0.52)}
