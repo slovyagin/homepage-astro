@@ -34,56 +34,51 @@ const handleResponsiveNav = () => {
   });
 };
 
-const setupThemeColorObserver = () => {
-  const $$sections = document.querySelectorAll('section');
-  const $meta = document.querySelector('meta[name="theme-color"]');
+const res = await fetch('/extra/');
 
-  const updateThemeColor = (entries: IntersectionObserverEntry[]) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const section = entry.target as HTMLElement;
-        const backgroundColor = section.style.getPropertyValue('--bg-color');
+if (res.ok && $slot) {
+  const htmlString = await res.text();
+  const doc = new DOMParser().parseFromString(htmlString, "text/html");
+  const $content = doc.getElementById('extra');
 
-        $meta?.setAttribute('content', backgroundColor);
-      }
-    });
-  };
-
-  const observer = new IntersectionObserver(updateThemeColor, {
-    threshold: 0.95
-  });
-
-  $$sections.forEach(section => observer.observe(section));
-};
-
-const init = async () => {
-  const res = await fetch('/extra/');
-  if (res.ok && $slot) {
-    const htmlString = await res.text();
-    const doc = new DOMParser().parseFromString(htmlString, "text/html");
-    const $content = doc.getElementById('extra');
-
-    if ($content) {
-      $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
-    }
-
-    $slot.remove();
-    handleResponsiveNav();
-    mq.addEventListener("change", handleResponsiveNav);
-
-    if (hash) {
-      const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
-
-      target?.click();
-    }
-
-    if (mq.matches) {
-      setupThemeColorObserver();
-    }
+  if ($content) {
+    $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
   }
-};
 
-init();
+  $slot.remove();
+  
+  handleResponsiveNav();
+  mq.addEventListener("change", handleResponsiveNav);
+
+  if (hash) {
+    const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
+
+    target?.click();
+  }
+
+  if (mq.matches) {
+    const $$sections = document.querySelectorAll('section');
+    const $meta = document.querySelector('meta[name="theme-color"]');
+    
+    const updateThemeColor = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target as HTMLElement;
+          const backgroundColor = section.style.getPropertyValue('--bg-color');
+  
+          $meta?.setAttribute('content', backgroundColor);
+        }
+      });
+    };
+    
+    const observer = new IntersectionObserver(updateThemeColor, {
+        threshold: 0.5,
+        rootMargin: "-50% 0px -50% 0px"
+      });
+  
+    $$sections.forEach(section => observer.observe(section));
+  }
+}
 </script>
 
 <Layout title={config.title}>
