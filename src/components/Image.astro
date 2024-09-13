@@ -22,7 +22,7 @@ const {
 <section
   data-background={backgroundColor ?? "transparent"}
   id={id}
-  style={`background-color: ${backgroundColor ?? "transparent"}`}
+  style={`--bg-color: ${backgroundColor ?? "transparent"}; --text-color: ${color === "black" ? "var(--black)" : "var(--white)"};`}
 >
   <figure>
       <a href={`#${id}`}>
@@ -62,13 +62,13 @@ const {
       color: var(--black);
     }
     100% {
-      background-color: attr(data-background);
+      background-color: var(--bg-color);
     }
   }
 
   section {
     align-items: center;
-    background-color: attr(data-background color);
+    background-color: var(--bg-color);
     display: grid;
     min-height: min(70vw, 100vh);
     padding: var(--gap);
@@ -76,9 +76,9 @@ const {
     scroll-snap-align: start;
 
     &:target {
-	    animation-duration: 5s;
+	    animation-duration: 3s;
 	    animation-name: target;
-        animation-timing-function: ease;
+      animation-timing-function: ease;
     }
   }
 
@@ -146,17 +146,13 @@ const {
   }
 
   figcaption {
-    color: var(--white);
+    color: var(--text-color);
     font-size: var(--sm);
+    line-height: 1;
     margin: 0;
     opacity: 0.8;
     padding-inline: calc(var(--gap) * 1/4);
     text-align: end;
     user-select: text;
-    line-height: 1;
-
-    &.black {
-      color: var(--black);
-    }
   }
 </style>

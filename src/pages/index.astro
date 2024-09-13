@@ -9,48 +9,81 @@ const color = images[0].color ?? "#fff";
 ---
 
 <script>
-  const $slot = document.getElementById("slot");
-  const mq = window.matchMedia("(width <= 40rem)");
-  const {hash} = window.location
-  const handleResponsiveNav = () => {
-      const $links = document.querySelectorAll<HTMLAnchorElement>("section a")
-      $links?.forEach((link, index) => {
-        if (!link) {
-          return
-        };
-        const prev = !!(index % 2);
-        const handler: EventListenerOrEventListenerObject = (event) => {
-          if (mq.matches) {
-            return
-          };
-          event.preventDefault();
-          link.closest('section')?.[
-            prev ? "previousElementSibling" : "nextElementSibling"
-          ]?.scrollIntoView();
-        };
+const $slot = document.getElementById("slot");
+const mq = window.matchMedia("(width <= 40rem)");
+const { hash } = window.location;
 
-        link.addEventListener("click", handler);
-      });
+const handleResponsiveNav = () => {
+  const $links = document.querySelectorAll<HTMLAnchorElement>("section a");
+  $links?.forEach((link, index) => {
+    if (!link) {
+      return;
     }
-  const res = await fetch('/extra/');
 
+    const prev = !!(index % 2);
+    const handler: EventListenerOrEventListenerObject = (event) => {
+      if (mq.matches) return;
+
+      event.preventDefault();
+      link.closest('section')?.[
+        prev ? "previousElementSibling" : "nextElementSibling"
+      ]?.scrollIntoView();
+    };
+
+    link.addEventListener("click", handler);
+  });
+};
+
+const setupThemeColorObserver = () => {
+  const sections = document.querySelectorAll('section');
+  const $meta = document.querySelector('meta[name="theme-color"]');
+
+  const updateThemeColor = (entries: IntersectionObserverEntry[]) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const section = entry.target as HTMLElement;
+        const backgroundColor = section.style.getPropertyValue('--bg-color');
+
+        $meta?.setAttribute('content', backgroundColor);
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(updateThemeColor, {
+    threshold: 0.75
+  });
+
+  sections.forEach(section => observer.observe(section));
+};
+
+const init = async () => {
+  const res = await fetch('/extra/');
   if (res.ok && $slot) {
-    const htmlString = await res.text()
-    const doc = new DOMParser().parseFromString(htmlString, "text/html")
-    const $content = doc.getElementById('extra')
+    const htmlString = await res.text();
+    const doc = new DOMParser().parseFromString(htmlString, "text/html");
+    const $content = doc.getElementById('extra');
 
     if ($content) {
       $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
     }
+
     $slot.remove();
     handleResponsiveNav();
     mq.addEventListener("change", handleResponsiveNav);
 
     if (hash) {
       const target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
+
       target?.click();
-   }
+    }
+
+    if (mq.matches) {
+      setupThemeColorObserver();
+    }
   }
+};
+
+init();
 </script>
 
 <Layout title={config.title}>
