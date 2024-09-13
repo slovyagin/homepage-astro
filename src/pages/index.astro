@@ -15,6 +15,7 @@ const { hash } = window.location;
 
 const handleResponsiveNav = () => {
   const $$links = document.querySelectorAll<HTMLAnchorElement>("section a");
+
   $$links?.forEach((link, index) => {
     if (!link) {
       return;
@@ -22,7 +23,9 @@ const handleResponsiveNav = () => {
 
     const prev = !!(index % 2);
     const handler: EventListenerOrEventListenerObject = (event) => {
-      if (mq.matches) return;
+      if (mq.matches) {
+        return;
+      }
 
       event.preventDefault();
       link.closest('section')?.[
@@ -37,16 +40,20 @@ const handleResponsiveNav = () => {
 const res = await fetch('/extra/');
 
 if (res.ok && $slot) {
-  const htmlString = await res.text();
-  const doc = new DOMParser().parseFromString(htmlString, "text/html");
-  const $content = doc.getElementById('extra');
+  try {
+    const htmlString = await res.text();
+    const doc = new DOMParser().parseFromString(htmlString, "text/html");
+    const $content = doc.getElementById('extra');
 
-  if ($content) {
-    $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
+    if ($content) {
+      $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
+    }
+
+    $slot.remove();
+  } catch (error) {
+    console.error(error);
   }
 
-  $slot.remove();
-  
   handleResponsiveNav();
   mq.addEventListener("change", handleResponsiveNav);
 
@@ -59,23 +66,23 @@ if (res.ok && $slot) {
   if (mq.matches) {
     const $$sections = document.querySelectorAll('section');
     const $meta = document.querySelector('meta[name="theme-color"]');
-    
+
     const updateThemeColor = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const section = entry.target as HTMLElement;
           const backgroundColor = section.style.getPropertyValue('--bg-color');
-  
+
           $meta?.setAttribute('content', backgroundColor);
         }
       });
     };
-    
+
     const observer = new IntersectionObserver(updateThemeColor, {
         threshold: 0.5,
         rootMargin: "-50% 0px -50% 0px"
       });
-  
+
     $$sections.forEach(section => observer.observe(section));
   }
 }
@@ -94,7 +101,7 @@ if (res.ok && $slot) {
 
   <ImagesList images={images}/>
 
-  <div id="slot"/>
+  <div id="slot" />
 </Layout>
 
 
@@ -115,17 +122,16 @@ if (res.ok && $slot) {
   }
 
   header {
+    display: grid;
     padding: var(--gap);
+    place-content: center;
     scroll-snap-align: start;
     text-align: center;
-    display: grid;
-    place-content: center;
 
     * {
       font-size: var(--lg);
       font-weight: normal;
       margin: 0;
-      -webkit-user-select: text;
       user-select: text;
     }
   }
@@ -134,6 +140,9 @@ if (res.ok && $slot) {
       header {
           background-color: transparent;
           margin-block-end: -8cqh;
+          padding: calc(var(--gap) * 2) calc(var(--gap) * 1/2) 0;
+          place-content: start;
+          text-align: start;
           z-index: 1;
       }
   }
