@@ -13,31 +13,11 @@ const { images, loading = "eager" } = Astro.props;
 <>
 {
     images?.map(
-      (
-        {
-          backgroundColor,
-          caption,
-          color,
-          height,
-          id,
-          largeUrl,
-          mobileUrl,
-          url,
-          width,
-        }
-      ) => {
+      (props) => {
         return (
           <ImageComponent
-            backgroundColor={backgroundColor}
-            caption={caption}
-            color={color}
-            height={height}
-            id={id}
-            largeUrl={largeUrl}
+            {...props}
             loading={loading}
-            mobileUrl={mobileUrl}
-            url={url}
-            width={width}
           />
         );
       }

@@ -14,8 +14,8 @@ const mq = window.matchMedia("(width <= 40rem)");
 const { hash } = window.location;
 
 const handleResponsiveNav = () => {
-  const $links = document.querySelectorAll<HTMLAnchorElement>("section a");
-  $links?.forEach((link, index) => {
+  const $$links = document.querySelectorAll<HTMLAnchorElement>("section a");
+  $$links?.forEach((link, index) => {
     if (!link) {
       return;
     }
@@ -35,7 +35,7 @@ const handleResponsiveNav = () => {
 };
 
 const setupThemeColorObserver = () => {
-  const sections = document.querySelectorAll('section');
+  const $$sections = document.querySelectorAll('section');
   const $meta = document.querySelector('meta[name="theme-color"]');
 
   const updateThemeColor = (entries: IntersectionObserverEntry[]) => {
@@ -53,7 +53,7 @@ const setupThemeColorObserver = () => {
     threshold: 0.95
   });
 
-  sections.forEach(section => observer.observe(section));
+  $$sections.forEach(section => observer.observe(section));
 };
 
 const init = async () => {

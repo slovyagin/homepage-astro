@@ -20,7 +20,6 @@ const {
 ---
 
 <section
-  data-background={backgroundColor ?? "transparent"}
   id={id}
   style={`--bg-color: ${backgroundColor ?? "transparent"}; --text-color: ${color === "black" ? "var(--black)" : "var(--white)"};`}
 >
@@ -39,7 +38,7 @@ const {
           />
         </picture>
       </a>
-      {caption ? <figcaption class={color === "black" ? 'black' : null}>{caption}</figcaption> : null}
+      {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
 </section>
 
@@ -76,8 +75,8 @@ const {
     scroll-snap-align: start;
 
     &:target {
-	    animation-duration: 3s;
-	    animation-name: target;
+	  animation-duration: 3s;
+	  animation-name: target;
       animation-timing-function: ease;
     }
   }
