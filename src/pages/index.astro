@@ -50,7 +50,7 @@ const setupThemeColorObserver = () => {
   };
 
   const observer = new IntersectionObserver(updateThemeColor, {
-    threshold: 0.75
+    threshold: 0.9
   });
 
   sections.forEach(section => observer.observe(section));
