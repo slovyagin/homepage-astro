@@ -31,8 +31,8 @@ const scaledWidth = Math.floor(width * 0.52);
     <a href={`#${id}`}>
       <picture>
         <source srcset={mobileUrl} media="(width <= 40rem)" />
-        <source srcset={url} media="(40rem < width < 100rem)" />
-        <source srcset={largeUrl} media="(width >= 100rem)" />
+        <source srcset={url} media="(40rem < width < 120rem)" />
+        <source srcset={largeUrl} media="(width >= 120rem)" />
         <img
           alt=""
           height={scaledHeight}
