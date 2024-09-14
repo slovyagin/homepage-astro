@@ -96,7 +96,7 @@ if (res.ok && slot) {
   <footer style={`
     --footer-bg-color: ${lastImage.backgroundColor};
     --span: ${Astro.locals.images.length % 2 ? 'span 2 / span 2' : 'auto'};
-  `}>❧</footer>
+  `}/>
 </Layout>
 
 <style>
@@ -141,6 +141,10 @@ if (res.ok && slot) {
     scroll-snap-align: start;
     text-align: center;
     grid-column: var(--span);
+
+    &::before {
+      content: "❧";
+    }
   }
 
   @media (width <= 40rem) {

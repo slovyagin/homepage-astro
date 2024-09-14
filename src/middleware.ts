@@ -2,8 +2,8 @@ import { createHash } from "node:crypto";
 import { defineMiddleware } from "astro:middleware";
 import { v2 as cloudinary } from "cloudinary";
 import type { Image } from "./types";
-import { getResizedUrl, invertColor, shuffle } from "./utils";
 import { CLOUDFLARE_API_URL, MOBILE_SIZE, BASELINE_SIZE, LARGE_SIZE } from "./constants";
+import { getResizedUrl, invertColor, shuffle } from "./utils";
 
 let images: Array<Image> = [];
 
