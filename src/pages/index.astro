@@ -100,7 +100,7 @@ if (res.ok && $slot) {
   <ImagesList images={images}/>
 
   <div id="slot" />
-  <footer style={{color: color === 'white' ? 'var(--white)' : 'var(--black)'}}>\</footer>
+  <footer>\</footer>
 </Layout>
 
 
@@ -136,9 +136,11 @@ if (res.ok && $slot) {
   }
 
   footer {
+    background-color: var(--white);
+    color: var(--slime);
     display: grid;
-    place-content: center;
     padding: var(--gap);
+    place-content: center;
     text-align: center;
   }
 
