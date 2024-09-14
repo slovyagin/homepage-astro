@@ -8,80 +8,74 @@ const color = images[0].color ?? "#fff";
 ---
 
 <script>
-const $slot = document.getElementById("slot");
+const slot = document.getElementById("slot");
 const mq = window.matchMedia("(width <= 40rem)");
 const { hash } = window.location;
 
-const handleResponsiveNav = () => {
-  const $$links = document.querySelectorAll<HTMLAnchorElement>("section a");
+const setupNav = () => {
+  const links = document.querySelectorAll<HTMLAnchorElement>("section a");
 
-  $$links?.forEach((link, index) => {
-    if (!link) {
-      return;
-    }
+  links?.forEach((link, i) => {
+    if (!link) return;
 
-    const prev = !!(index % 2);
-    const handler: EventListenerOrEventListenerObject = (event) => {
-      if (mq.matches) {
-        return;
-      }
+    const prev = !!(i % 2);
+    const onClick = (e: Event) => {
+      if (mq.matches) return;
 
-      event.preventDefault();
+      e.preventDefault();
       link.closest('section')?.[
         prev ? "previousElementSibling" : "nextElementSibling"
       ]?.scrollIntoView();
     };
 
-    link.addEventListener("click", handler);
+    link.addEventListener("click", onClick);
   });
 };
 
 const res = await fetch('/extra/');
 
-if (res.ok && $slot) {
+if (res.ok && slot) {
   try {
-    const htmlString = await res.text();
-    const doc = new DOMParser().parseFromString(htmlString, "text/html");
-    const $content = doc.getElementById('extra');
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const content = doc.getElementById('extra');
 
-    if ($content) {
-      $slot.insertAdjacentHTML("beforebegin", $content.innerHTML);
+    if (content) {
+      slot.insertAdjacentHTML("beforebegin", content.innerHTML);
     }
-
-    $slot.remove();
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
   }
+  slot.remove();
 
-  handleResponsiveNav();
-  mq.addEventListener("change", handleResponsiveNav);
+  setupNav();
+  mq.addEventListener("change", setupNav);
 
   if (hash) {
-    const $target = document.querySelector<HTMLAnchorElement>(`${hash} a`);
-
-    $target?.click();
+    requestAnimationFrame(() => {
+      const target = document.querySelector(hash);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView();
+      }
+    });
   }
 
   if (mq.matches) {
-    const $$sections = document.querySelectorAll('section');
-    const $meta = document.querySelector('meta[name="theme-color"]');
+    const sections = document.querySelectorAll('section');
+    const meta = document.querySelector('meta[name="theme-color"]');
 
-    const updateThemeColor = (entries: IntersectionObserverEntry[]) => {
+    const updateColor = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const section = entry.target as HTMLElement;
-          const backgroundColor = section.style.getPropertyValue('--bg-color');
-
-          $meta?.setAttribute('content', backgroundColor);
+          const bgColor = section.style.getPropertyValue('--bg-color');
+          meta?.setAttribute('content', bgColor);
         }
       });
     };
 
-    const observer = new IntersectionObserver(updateThemeColor, {
-        threshold: 0.5,
-      });
-
-    $$sections.forEach(section => observer.observe(section));
+    const observer = new IntersectionObserver(updateColor, { threshold: 0.5 });
+    sections.forEach(section => observer.observe(section));
   }
 }
 </script>
@@ -96,13 +90,13 @@ if (res.ok && $slot) {
       </div> : null
     }
   </header>
-
   <ImagesList images={images}/>
-
   <div id="slot" />
-  <footer>\</footer>
+  <footer style={`
+    --footer-bg-color: ${Astro.locals.images[Astro.locals.images.length - 1].backgroundColor};
+    --span: ${Astro.locals.images.length % 2 ? 'span 2 / span 2' : 'auto'};
+  `}/>
 </Layout>
-
 
 <style>
   body {
@@ -136,14 +130,22 @@ if (res.ok && $slot) {
   }
 
   footer {
-    background-color: #c9cac1;
+    min-height: 100vh;
+    background-color: var(--footer-bg-color);
     color: var(--slime);
     display: grid;
+    font-size: max(2rem, 2.5cqi);
     padding: var(--gap);
     place-content: center;
+    scroll-snap-align: start;
     text-align: center;
-  }
+    grid-column: var(--span);
 
+    &::before {
+      content: "❧";
+    }
+  }
+  
   @media (width <= 40rem) {
       header {
           background-color: transparent;
@@ -152,6 +154,10 @@ if (res.ok && $slot) {
           place-content: start;
           text-align: start;
           z-index: 1;
+      }
+
+      footer {
+        min-height: 25vh;
       }
   }
 </style>

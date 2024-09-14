@@ -73,15 +73,16 @@ const scaledWidth = Math.floor(width * 0.52);
     padding: var(--gap);
     place-content: center;
     scroll-snap-align: start;
+    color: var(--text-color);
+    
+    &:target {
+        animation: target 3s ease;
+    }
+    
+    &:nth-child(odd) a { cursor: url(/prev.svg), auto; }
+    &:nth-child(even) a { cursor: url(/next.svg), auto; }
+    &:last-child a { cursor: default; }
   }
-
-  section:target {
-    animation: target 3s ease;
-  }
-
-  section:nth-child(odd) a { cursor: url(/prev.svg), auto; }
-  section:nth-child(even) a { cursor: url(/next.svg), auto; }
-  section:last-child a { cursor: default; }
 
   figure {
     display: grid;
@@ -106,7 +107,6 @@ const scaledWidth = Math.floor(width * 0.52);
   }
 
   figcaption {
-    color: var(--text-color);
     font-size: var(--md);
     line-height: 1;
     margin: 0;
