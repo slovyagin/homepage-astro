@@ -5,6 +5,7 @@ import { INITIAL_IMAGES_COUNT, PROFILE } from "../constants";
 
 const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 const color = images[0].color ?? "#fff";
+const lastImage = Astro.locals.images[Astro.locals.images.length - 1];
 ---
 
 <script>
@@ -54,7 +55,7 @@ if (res.ok && slot) {
   if (hash) {
     requestAnimationFrame(() => {
       const target = document.querySelector(`${hash} a`);
-      
+
       if (target instanceof HTMLElement) {
         target.click();
       }
@@ -68,8 +69,7 @@ if (res.ok && slot) {
     const updateColor = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const section = entry.target as HTMLElement;
-          const bgColor = section.style.getPropertyValue('--bg-color');
+          const bgColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color');
           meta?.setAttribute('content', bgColor);
         }
       });
@@ -94,9 +94,9 @@ if (res.ok && slot) {
   <ImagesList images={images}/>
   <div id="slot" />
   <footer style={`
-    --footer-bg-color: ${Astro.locals.images[Astro.locals.images.length - 1].backgroundColor};
+    --footer-bg-color: ${lastImage.backgroundColor};
     --span: ${Astro.locals.images.length % 2 ? 'span 2 / span 2' : 'auto'};
-  `}/>
+  `}>❧</footer>
 </Layout>
 
 <style>
@@ -141,12 +141,8 @@ if (res.ok && slot) {
     scroll-snap-align: start;
     text-align: center;
     grid-column: var(--span);
-
-    &::before {
-      content: "❧";
-    }
   }
-  
+
   @media (width <= 40rem) {
       header {
           background-color: transparent;
