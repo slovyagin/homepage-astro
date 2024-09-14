@@ -53,9 +53,10 @@ if (res.ok && slot) {
 
   if (hash) {
     requestAnimationFrame(() => {
-      const target = document.querySelector(hash);
+      const target = document.querySelector(`${hash} a`);
+      
       if (target instanceof HTMLElement) {
-        target.scrollIntoView();
+        target.click();
       }
     });
   }
