@@ -2,47 +2,51 @@
 import type { Image } from "../types";
 
 interface Props extends Image {
-	loading: HTMLImageElement["loading"];
+  loading: HTMLImageElement["loading"];
 }
 
 const {
-	backgroundColor,
-	caption,
-	color,
-	height,
-	id,
-	largeUrl,
-	loading,
-	mobileUrl,
-	url,
-	width,
+  backgroundColor = "transparent",
+  caption,
+  color,
+  height,
+  id,
+  largeUrl,
+  loading,
+  mobileUrl,
+  url,
+  width,
 } = Astro.props;
+
+const textColor = color === "black" ? "var(--black)" : "var(--white)";
+const scaledHeight = Math.floor(height * 0.52);
+const scaledWidth = Math.floor(width * 0.52);
 ---
 
 <section
   id={id}
-  style={`--bg-color: ${backgroundColor ?? "transparent"}; --text-color: ${color === "black" ? "var(--black)" : "var(--white)"};`}
+  style={`--bg-color: ${backgroundColor}; --text-color: ${textColor};`}
 >
   <figure>
-      <a href={`#${id}`}>
-        <picture>
-          <source srcset={mobileUrl} media="(width <= 40rem)" />
-          <source srcset={url} media="(40rem < width < 100rem)" />
-          <source srcset={largeUrl} media="(width >= 100rem)" />
-          <img
-            alt=""
-            height={~~(height * 0.52)}
-            loading={loading}
-            src={mobileUrl}
-            width={~~(width * 0.52)}
-          />
-        </picture>
-      </a>
-      {caption ? <figcaption>{caption}</figcaption> : null}
-    </figure>
+    <a href={`#${id}`}>
+      <picture>
+        <source srcset={mobileUrl} media="(width <= 40rem)" />
+        <source srcset={url} media="(40rem < width < 100rem)" />
+        <source srcset={largeUrl} media="(width >= 100rem)" />
+        <img
+          alt=""
+          height={scaledHeight}
+          loading={loading}
+          src={mobileUrl}
+          width={scaledWidth}
+        />
+      </picture>
+    </a>
+    {caption ? <figcaption>{caption}</figcaption> : null}
+  </figure>
 </section>
 
- <style>
+<style>
   :root {
     --size: min(
       calc(50vw - var(--gap) * 2),
@@ -52,11 +56,7 @@ const {
   }
 
   @keyframes target {
-    0% {
-      background-color: var(--slime);
-      color: var(--black);
-    }
-    80% {
+    0%, 80% {
       background-color: var(--slime);
       color: var(--black);
     }
@@ -73,53 +73,21 @@ const {
     padding: var(--gap);
     place-content: center;
     scroll-snap-align: start;
-
-    &:target {
-	  animation-duration: 3s;
-	  animation-name: target;
-      animation-timing-function: ease;
-    }
   }
 
-
-  @media (width <= 40rem) {
-    section {
-      display: grid;
-      height: auto;
-      min-height: 100vh;
-      padding-block-end: calc(var(--gap) * 4);
-      padding: calc(var(--gap) * 0.5);
-      place-content: center;
-    }
+  section:target {
+    animation: target 3s ease;
   }
 
-  section {
-    &:nth-child(odd) a {
-      cursor: url(/prev.svg), auto
-    }
-
-    &:nth-child(even) a {
-      cursor: url(/next.svg), auto
-    }
-
-    &:last-child a {
-      cursor: default
-    }
-  }
-
-  @media (width <= 40rem) {
-      section a:link {
-        cursor: pointer
-      }
-    }
-
+  section:nth-child(odd) a { cursor: url(/prev.svg), auto; }
+  section:nth-child(even) a { cursor: url(/next.svg), auto; }
+  section:last-child a { cursor: default; }
 
   figure {
     display: grid;
-    gap: calc(var(--gap) * 1/4);
-    margin: 0;
+    gap: calc(var(--gap) * 0.25);
+    margin: 0 0 calc(-1 * (var(--gap) * 0.25 + var(--md))) 0;
     width: fit-content;
-    margin-block-end: calc(-1 * (var(--gap) * 1/4 + var(--sm)));
   }
 
   picture {
@@ -137,21 +105,32 @@ const {
     width: auto;
   }
 
+  figcaption {
+    color: var(--text-color);
+    font-size: var(--md);
+    line-height: 1;
+    margin: 0;
+    opacity: 0.8;
+    padding-inline: calc(var(--gap) * 0.25);
+    text-align: end;
+    user-select: text;
+  }
+
   @media (width <= 40rem) {
+    section {
+      height: auto;
+      min-height: 100vh;
+      padding: calc(var(--gap) * 0.5);
+      padding-block-end: calc(var(--gap) * 4);
+    }
+
+    section a:link {
+      cursor: pointer;
+    }
+
     img {
       max-width: calc(100vw - var(--gap));
       max-height: calc(100vw - var(--gap));
     }
-  }
-
-  figcaption {
-    color: var(--text-color);
-    font-size: var(--sm);
-    line-height: 1;
-    margin: 0;
-    opacity: 0.8;
-    padding-inline: calc(var(--gap) * 1/4);
-    text-align: end;
-    user-select: text;
   }
 </style>

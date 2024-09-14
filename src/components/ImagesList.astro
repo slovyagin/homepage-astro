@@ -3,24 +3,15 @@ import ImageComponent from "./Image.astro";
 import type { Image } from "../types";
 
 interface Props {
-	images: Array<Image>;
-	loading?: HTMLImageElement["loading"];
+  images: Image[];
+  loading?: HTMLImageElement["loading"];
 }
 
-const { images, loading = "eager" } = Astro.props;
+const { images = [], loading = "eager" } = Astro.props;
 ---
 
 <>
-{
-    images?.map(
-      (props) => {
-        return (
-          <ImageComponent
-            {...props}
-            loading={loading}
-          />
-        );
-      }
-    )
-  }
-<>
+  {images.map((props) => (
+    <ImageComponent {...props} loading={loading} />
+  ))}
+</>
