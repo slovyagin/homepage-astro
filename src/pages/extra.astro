@@ -2,8 +2,9 @@
 import ImagesList from "../components/ImagesList.astro";
 import { INITIAL_IMAGES_COUNT } from "../constants";
 
+export const partial = true;
+
 const images = Astro.locals.images.slice(INITIAL_IMAGES_COUNT);
 ---
-<div id="extra">
-  <ImagesList images={images} loading="lazy" />
-</div>
+
+<ImagesList images={images} loading="lazy" />

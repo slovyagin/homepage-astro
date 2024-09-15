@@ -4,8 +4,6 @@ import ImagesList from "../components/ImagesList.astro";
 import { INITIAL_IMAGES_COUNT, PROFILE } from "../constants";
 
 const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
-const color = images[0].color ?? "#fff";
-const lastImage = Astro.locals.images[Astro.locals.images.length - 1];
 ---
 
 <script>
@@ -38,11 +36,9 @@ const res = await fetch('/extra/');
 if (res.ok && slot) {
   try {
     const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    const content = doc.getElementById('extra');
 
-    if (content) {
-      slot.insertAdjacentHTML("beforebegin", content.innerHTML);
+    if (html) {
+      slot.outerHTML = html;
     }
   } catch (err) {
     console.error(err);
@@ -82,21 +78,8 @@ if (res.ok && slot) {
 </script>
 
 <Layout title={PROFILE.title}>
-  <header style={{color: color === 'white' ? 'var(--white)' : 'var(--black)'}}>
-    {
-    PROFILE.title || PROFILE.description
-    ? <div>
-        {PROFILE.title ? <h1>{PROFILE.title}</h1> : null}
-        {PROFILE.description ? <p>{PROFILE.description}</p> : null}
-      </div> : null
-    }
-  </header>
   <ImagesList images={images}/>
   <div id="slot" />
-  <footer style={`
-    --footer-bg-color: ${lastImage.backgroundColor};
-    --span: ${Astro.locals.images.length % 2 ? 'span 2 / span 2' : 'auto'};
-  `}/>
 </Layout>
 
 <style>
@@ -113,52 +96,5 @@ if (res.ok && slot) {
     body {
       grid-template-columns: 1fr;
     }
-  }
-
-  header {
-    display: grid;
-    padding: var(--gap);
-    place-content: center;
-    scroll-snap-align: start;
-    text-align: center;
-
-    * {
-      font-size: var(--lg);
-      font-weight: normal;
-      margin: 0;
-      user-select: text;
-    }
-  }
-
-  footer {
-    min-height: 100vh;
-    background-color: var(--footer-bg-color);
-    color: var(--slime);
-    display: grid;
-    font-size: max(2rem, 2.5cqi);
-    padding: var(--gap);
-    place-content: center;
-    scroll-snap-align: start;
-    text-align: center;
-    grid-column: var(--span);
-
-    &::before {
-      content: "❦";
-    }
-  }
-
-  @media (width <= 40rem) {
-      header {
-          background-color: transparent;
-          margin-block-end: -8cqh;
-          padding: calc(var(--gap) * 2) calc(var(--gap) * 1/2) 0;
-          place-content: start;
-          text-align: start;
-          z-index: 1;
-      }
-
-      footer {
-        min-height: 25vh;
-      }
   }
 </style>
