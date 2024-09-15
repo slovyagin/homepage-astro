@@ -159,10 +159,10 @@ const lastImage = images[images.length - 1];
         background-color: var(--footer-bg-color);
         color: var(--slime);
         display: grid;
-        font-size: max(2rem, 2.5cqi);
+        font-size: clamp(2rem, 2.5cqi, 3rem);
         padding: var(--gap);
         place-content: center;
-        scroll-snap-align: start;
+        scroll-snap-align: end;
         text-align: center;
         grid-column: var(--span);
 
