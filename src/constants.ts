@@ -1,5 +1,7 @@
+import { getCurrentYear } from "./utils";
+
 export const PROFILE = {
-  description: `Selected Pictures: 2015–${new Date().getFullYear()}`,
+  description: `Selected Pictures: 2015–${getCurrentYear()}`,
   image:
     "https://images.slovyagin.com/upload/v1630866054/homepage/191510530_lveoxs.jpg",
   title: "Bogdan Slovyagin",

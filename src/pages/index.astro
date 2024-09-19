@@ -67,6 +67,8 @@ if (res.ok && slot) {
         if (entry.isIntersecting) {
           const bgColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color');
           meta?.setAttribute('content', bgColor);
+
+          document.documentElement.style.setProperty('--bg', bgColor);
         }
       });
     };

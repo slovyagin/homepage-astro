@@ -1,8 +1,9 @@
 import { BASELINE_SIZE } from "./constants";
 
-export const getCurrentYear = () => {
+export const getCurrentYear = (fallback = 2024) => {
   const year = new Date().getFullYear();
-  return year > 2000 ? year : 2024; // 2024 as a fallback, adjust as needed
+
+  return year > 2000 ? year : fallback;
 };
 
 export const shuffle = <T>(array: T[]) => {
