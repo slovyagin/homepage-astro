@@ -54,6 +54,20 @@ const lastImage = images[images.length - 1];
     />
 
     <link rel="prefetch" href="/extra/" as="document" />
+
+    <style set:html={
+      `
+      @font-face {
+          font-family: FF Meta Web Pro Condensed;
+          src: url(${FF_META_PRO_URL}) format("woff2");
+          font-style: normal;
+          font-display: swap;
+          font-weight: 600;
+          font-stretch: normal;
+          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+      `
+    } />
   </head>
   <body>
     <header style={{color: color === 'white' ? 'var(--white)' : 'var(--black)'}}>
@@ -72,20 +86,6 @@ const lastImage = images[images.length - 1];
     `}/>
   </body>
 </html>
-
-<style set:html={
-  `
-  @font-face {
-      font-family: FF Meta Web Pro Condensed;
-      src: url(${FF_META_PRO_URL}) format("woff2");
-      font-style: normal;
-      font-display: swap;
-      font-weight: 600;
-      font-stretch: normal;
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-    }
-  `
-} />
 
 <style is:global define:vars={{ bg }}>
   :root {
@@ -144,7 +144,7 @@ const lastImage = images[images.length - 1];
         place-content: center;
         scroll-snap-align: start;
         text-align: center;
-    
+
         * {
         font-size: var(--lg);
         font-weight: normal;
@@ -152,7 +152,7 @@ const lastImage = images[images.length - 1];
         user-select: text;
         }
     }
-  
+
     footer {
         min-height: 100vh;
         background-color: var(--footer-bg-color);
