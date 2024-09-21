@@ -7,10 +7,10 @@ interface Props {
 
 const { title } = Astro.props;
 const { images } = Astro.locals;
-const count = images.length ?? 0;
-const bg = images[0].backgroundColor ?? "#fff";
-const color = images[0].color ?? "#fff";
-const lastImage = images[images.length - 1];
+const count = images?.length ?? 0;
+const bg = images?.[0]?.backgroundColor ?? "#fff";
+const color = images?.[0]?.color ?? "#fff";
+const lastImage = images?.[images?.length - 1] ?? {};
 ---
 
 <!doctype html>
@@ -81,7 +81,7 @@ const lastImage = images[images.length - 1];
     </header>
     <slot />
     <footer style={`
-      --footer-bg-color: ${lastImage.backgroundColor};
+      --footer-bg-color: ${lastImage?.backgroundColor};
       --span: ${count % 2 ? 'span 2 / span 2' : 'auto'};
     `}/>
   </body>
