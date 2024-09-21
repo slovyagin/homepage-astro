@@ -146,15 +146,16 @@ const lastImage = images[images.length - 1];
         text-align: center;
 
         * {
-        font-size: var(--lg);
-        font-weight: normal;
-        margin: 0;
-        user-select: text;
+            font-size: var(--lg);
+            font-weight: normal;
+            margin: 0;
+            user-select: text;
         }
     }
 
     footer {
         min-height: 100vh;
+        max-width: auto;
         background-color: var(--footer-bg-color);
         color: var(--slime);
         display: grid;
@@ -182,6 +183,7 @@ const lastImage = images[images.length - 1];
 
           footer {
             min-height: 25vh;
+            grid-column: auto;
           }
       }
 </style>
