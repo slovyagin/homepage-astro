@@ -19,7 +19,8 @@ async function fetchImages() {
 export const onRequest = defineMiddleware(async (context, next) => {
   if (!context.locals.images) {
     try {
-      context.locals.images = await fetchImages();
+      const { images } = await fetchImages()
+      context.locals.images = images;
     } catch (error) {
       console.error('Error fetching images:', error);
       context.locals.images = [];
