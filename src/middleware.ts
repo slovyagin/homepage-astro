@@ -28,12 +28,19 @@ async function fetchAllImages() {
     pagination: { total_pages },
     images,
   } = await fetchImages(1);
-
+  
   return (
     await Promise.all([
       images,
-      ...Array.from({ length: total_pages - 1 }, (_, i) =>
-        fetchImages(i + 2).then((page) => page.images)
+      ...Array.from(
+        {
+          length: total_pages - 1,
+        },
+        (_, i) => {
+          const images = fetchImages(i + 2).then((page) => page.images)
+
+          return images
+        }
       ),
     ])
   ).flat();
@@ -43,6 +50,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!context.locals.images) {
     try {
       const images = await fetchAllImages();
+      console.log(images.length);
       context.locals.images = images;
     } catch (error) {
       console.error("Error fetching images:", error);
