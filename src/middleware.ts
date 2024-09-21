@@ -46,7 +46,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       context.locals.images = images;
     } catch (error) {
       console.error("Error fetching images:", error);
-      throw error; // Re-throw the error to stop execution
+      throw error;
     }
   }
 
