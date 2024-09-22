@@ -79,6 +79,31 @@ if (res.ok && slot) {
 }
 </script>
 
+<Fragment slot="head">
+    {images.map(({ mobileUrl, url, largeUrl }) => (
+    <>
+        <link
+            rel="preload"
+            as="image"
+            href={mobileUrl}
+            media="(width <= 40rem)"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href={url}
+            media="(40rem < width < 120rem)"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href={largeUrl}
+            media="(width >= 120rem)"
+        />
+    </>
+    ))}
+</slot>
+
 <Layout title={PROFILE.title}>
   <ImagesList images={images}/>
   <div id="slot" />

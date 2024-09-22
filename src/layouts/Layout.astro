@@ -68,6 +68,8 @@ const lastImage = images?.[images?.length - 1] ?? {};
         }
       `
     } />
+    
+    <slot name="head" />
   </head>
   <body>
     <header style={{color: color === 'white' ? 'var(--white)' : 'var(--black)'}}>
