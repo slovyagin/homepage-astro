@@ -1,5 +1,7 @@
 ---
 import type { Image } from "../types";
+import "../assets/prev.svg";
+import "../assets/next.svg";
 
 interface Props extends Image {
   loading: HTMLImageElement["loading"];
@@ -74,13 +76,13 @@ const scaledWidth = Math.floor(width * 0.52);
     place-content: center;
     scroll-snap-align: start;
     color: var(--text-color);
-    
+
     &:target {
         animation: target 3s ease;
     }
-    
-    &:nth-child(odd) a { cursor: url(/prev.svg), auto; }
-    &:nth-child(even) a { cursor: url(/next.svg), auto; }
+
+    &:nth-child(odd) a { cursor: url("../assets/prev.svg"), auto; }
+    &:nth-child(even) a { cursor: url("../assets/next.svg"), auto; }
     &:last-child a { cursor: default; }
   }
 
