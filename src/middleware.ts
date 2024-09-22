@@ -51,7 +51,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!context.locals.images) {
     const images = await fetchAllImages();
     const shuffledImages = shuffle(images);
-    
+
     try {
       context.locals.images = shuffledImages;
     } catch (error) {

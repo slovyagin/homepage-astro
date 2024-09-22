@@ -1,9 +1,9 @@
 import { getCurrentYear } from "./utils";
+import socialImage from "./assets/slovyagin.jpg";
 
 export const PROFILE = {
   description: `Selected Pictures: 2015–${getCurrentYear()}`,
-  image:
-    "https://images.slovyagin.com/upload/v1630866054/homepage/191510530_lveoxs.jpg",
+  image: socialImage.src,
   title: "Bogdan Slovyagin",
   url: "https://www.slovyagin.com/",
 } as const;
