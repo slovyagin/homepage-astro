@@ -1,4 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
+import { shuffle } from "./utils";
 
 const IMAGES_API_URL = "https://build.slovyagin.com";
 
@@ -28,7 +29,7 @@ async function fetchAllImages() {
     pagination: { total_pages },
     images,
   } = await fetchImages(1);
-  
+
   return (
     await Promise.all([
       images,
@@ -37,9 +38,9 @@ async function fetchAllImages() {
           length: total_pages - 1,
         },
         (_, i) => {
-          const images = fetchImages(i + 2).then((page) => page.images)
+          const images = fetchImages(i + 2).then((page) => page.images);
 
-          return images
+          return images;
         }
       ),
     ])
@@ -48,10 +49,11 @@ async function fetchAllImages() {
 
 export const onRequest = defineMiddleware(async (context, next) => {
   if (!context.locals.images) {
+    const images = await fetchAllImages();
+    const shuffledImages = shuffle(images);
+    
     try {
-      const images = await fetchAllImages();
-      console.log(images.length);
-      context.locals.images = images;
+      context.locals.images = shuffledImages;
     } catch (error) {
       console.error("Error fetching images:", error);
       throw error;
