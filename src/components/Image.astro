@@ -20,13 +20,14 @@ const {
   width,
 } = Astro.props;
 
+const textColor = color === "black" ? "var(--black)" : "var(--white)";
 const scaledHeight = Math.floor(height * 0.52);
 const scaledWidth = Math.floor(width * 0.52);
 ---
 
 <section
   id={id}
-  style={`--bg-color: ${backgroundColor}; --text-color: ${color};`}
+  style={`--bg-color: ${backgroundColor}; --text-color: ${textColor};`}
 >
   <figure>
     <a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}`: 'Picture anchor'}>
