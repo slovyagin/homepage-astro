@@ -30,7 +30,7 @@ const scaledWidth = Math.floor(width * 0.52);
   style={`--bg-color: ${backgroundColor}; --text-color: ${textColor};`}
 >
   <figure>
-    <a href={`#${id}`}>
+    <a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}`: 'Picture anchor'}>
       <picture>
         <source srcset={mobileUrl} media="(width <= 40rem)" />
         <source srcset={url} media="(40rem < width < 120rem)" />
