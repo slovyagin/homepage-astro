@@ -1,7 +1,7 @@
 export interface Image {
 	backgroundColor: string;
 	caption: string;
-	color: "black" | "white";
+	color: string;
 	height: number;
 	id: string;
 	largeUrl: string;
