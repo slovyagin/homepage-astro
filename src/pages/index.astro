@@ -8,7 +8,7 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
 
 <script>
 const slot = document.getElementById("slot");
-const mq = window.matchMedia("(width <= 40rem)");
+const mq = window.matchMedia("(width <= 50rem)");
 const { hash } = window.location;
 
 const setupNav = () => {
@@ -86,13 +86,13 @@ if (res.ok && slot) {
             rel="preload"
             as="image"
             href={mobileUrl}
-            media="(width <= 40rem)"
+            media="(width <= 50rem)"
         />
         <link
             rel="preload"
             as="image"
             href={url}
-            media="(40rem < width < 120rem)"
+            media="(50rem < width < 120rem)"
         />
         <link
             rel="preload"
@@ -119,7 +119,7 @@ if (res.ok && slot) {
     }
   }
 
-  @media (width <= 40rem) {
+  @media (width <= 50rem) {
     body {
       grid-template-columns: 1fr;
     }
