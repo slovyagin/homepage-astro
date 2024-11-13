@@ -86,19 +86,19 @@ if (res.ok && slot) {
             rel="preload"
             as="image"
             href={mobileUrl}
-            media="(width <= 50rem)"
+            media="(width <= 25rem)"
         />
         <link
             rel="preload"
             as="image"
             href={url}
-            media="(50rem < width < 120rem)"
+            media="(25rem < width < 40rem)"
         />
         <link
             rel="preload"
             as="image"
             href={largeUrl}
-            media="(width >= 120rem)"
+            media="(width >= 40rem)"
         />
     </>
     ))}

@@ -32,9 +32,9 @@ const scaledWidth = Math.floor(width * 0.52);
   <figure>
     <a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}`: 'Picture anchor'}>
       <picture>
-        <source srcset={mobileUrl} media="(width <= 40rem)" />
-        <source srcset={url} media="(40rem < width < 120rem)" />
-        <source srcset={largeUrl} media="(width >= 120rem)" />
+        <source srcset={mobileUrl} media="(width <= 25rem)" />
+        <source srcset={url} media="(25rem < width < 40rem)" />
+        <source srcset={largeUrl} media="(width >= 40rem)" />
         <img
           alt=""
           height={scaledHeight}
