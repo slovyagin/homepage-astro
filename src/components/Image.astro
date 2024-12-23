@@ -1,28 +1,28 @@
 ---
-import type { Image } from "../types";
-import "../assets/prev.svg";
-import "../assets/next.svg";
+import type { Image } from "../types"
+import "../assets/prev.svg"
+import "../assets/next.svg"
 
 interface Props extends Image {
-  loading: HTMLImageElement["loading"];
+	loading: HTMLImageElement["loading"]
 }
 
 const {
-  backgroundColor = "transparent",
-  caption,
-  color,
-  height,
-  id,
-  largeUrl,
-  loading,
-  mobileUrl,
-  url,
-  width,
-} = Astro.props;
+	backgroundColor = "transparent",
+	caption,
+	color,
+	height,
+	id,
+	largeUrl,
+	loading,
+	mobileUrl,
+	url,
+	width,
+} = Astro.props
 
-const textColor = color === "black" ? "var(--black)" : "var(--white)";
-const scaledHeight = Math.floor(height * 0.52);
-const scaledWidth = Math.floor(width * 0.52);
+const textColor = color === "black" ? "var(--black)" : "var(--white)"
+const scaledHeight = Math.floor(height * 0.52)
+const scaledWidth = Math.floor(width * 0.52)
 ---
 
 <section

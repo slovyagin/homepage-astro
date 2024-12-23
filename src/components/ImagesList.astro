@@ -1,13 +1,13 @@
 ---
-import ImageComponent from "./Image.astro";
-import type { Image } from "../types";
+import type { Image } from "../types"
+import ImageComponent from "./Image.astro"
 
 interface Props {
-  images: Image[];
-  loading?: HTMLImageElement["loading"];
+	images: Image[]
+	loading?: HTMLImageElement["loading"]
 }
 
-const { images = [], loading = "eager" } = Astro.props;
+const { images = [], loading = "eager" } = Astro.props
 ---
 
 <>

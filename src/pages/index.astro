@@ -1,127 +1,127 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import ImagesList from "../components/ImagesList.astro";
-import { INITIAL_IMAGES_COUNT, PROFILE } from "../constants";
+import ImagesList from "../components/ImagesList.astro"
+import { INITIAL_IMAGES_COUNT, PROFILE } from "../constants"
+import Layout from "../layouts/Layout.astro"
 
-const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT);
+const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 ---
 
-<script>
-const slot = document.getElementById("slot");
-const mq = window.matchMedia("(width <= 50rem)");
-const { hash } = window.location;
-
-const setupNav = () => {
-  const links = document.querySelectorAll<HTMLAnchorElement>("section a");
-
-  links?.forEach((link, i) => {
-    if (!link) return;
-
-    const prev = !!(i % 2);
-    const onClick = (e: Event) => {
-      if (mq.matches) return;
-
-      e.preventDefault();
-      link.closest('section')?.[
-        prev ? "previousElementSibling" : "nextElementSibling"
-      ]?.scrollIntoView();
-    };
-
-    link.addEventListener("click", onClick);
-  });
-};
-
-const res = await fetch('/extra/');
-
-if (res.ok && slot) {
-  try {
-    const html = await res.text();
-
-    if (html) {
-      slot.outerHTML = html;
-    }
-  } catch (err) {
-    console.error(err);
-  }
-  slot.remove();
-
-  setupNav();
-  mq.addEventListener("change", setupNav);
-
-  if (hash) {
-    requestAnimationFrame(() => {
-      const target = document.querySelector(`${hash} a`);
-
-      if (target instanceof HTMLElement) {
-        target.click();
-      }
-    });
-  }
-
-  if (mq.matches) {
-    const sections = document.querySelectorAll('section');
-    const meta = document.querySelector('meta[name="theme-color"]');
-
-    const updateColor = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const bgColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color');
-          meta?.setAttribute('content', bgColor);
-
-          document.documentElement.style.setProperty('--bg', bgColor);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(updateColor, { threshold: 0.5 });
-    sections.forEach(section => observer.observe(section));
-  }
-}
-</script>
-
-<Fragment slot="head">
-    {images.map(({ mobileUrl, url, largeUrl }) => (
-    <>
-        <link
-            rel="preload"
-            as="image"
-            href={mobileUrl}
-            media="(width <= 25rem)"
-        />
-        <link
-            rel="preload"
-            as="image"
-            href={url}
-            media="(25rem < width < 40rem)"
-        />
-        <link
-            rel="preload"
-            as="image"
-            href={largeUrl}
-            media="(width >= 40rem)"
-        />
-    </>
-    ))}
-</Fragment>
-
 <Layout title={PROFILE.title}>
-  <ImagesList images={images}/>
-  <div id="slot" />
+	<Fragment slot="head">
+		{images.map(({ mobileUrl, url, largeUrl }) => (
+			<>
+				<link
+					rel="preload"
+					as="image"
+					href={mobileUrl}
+					media="(max-width: 25rem)"
+				/>
+				<link
+					rel="preload"
+					as="image"
+					href={url}
+					media="(min-width: 25rem) and (max-width: 40rem)"
+				/>
+				<link
+					rel="preload"
+					as="image"
+					href={largeUrl}
+					media="(min-width: 40rem)"
+				/>
+			</>
+		))}
+	</Fragment>
+	<ImagesList images={images} />
+	<div id="slot" />
 </Layout>
 
 <style>
-  body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+	body {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
 
-    > section:nth-child(odd) {
-      max-width: var(--max-size);
-    }
-  }
+	body > section:nth-child(odd) {
+		max-width: var(--max-size);
+	}
 
-  @media (width <= 50rem) {
-    body {
-      grid-template-columns: 1fr;
-    }
-  }
+	@media (max-width: 50rem) {
+		body {
+			grid-template-columns: 1fr;
+		}
+	}
 </style>
+
+<script>
+	const slot = document.getElementById("slot")
+	const mq = window.matchMedia("(width <= 50rem)")
+	const {hash} = window.location
+
+	const setupNav = () => {
+		document.addEventListener('click', (e) => {
+			const target = e.target as HTMLElement
+			const link = target.closest('a')
+
+			if (!link?.closest('section') || mq.matches) {
+				return
+			}
+
+			const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('section a'))
+
+			const index = links.indexOf(link)
+			const prev = !!(index % 2)
+
+			e.preventDefault()
+			link.closest('section')?.[
+				prev ? 'previousElementSibling' : 'nextElementSibling'
+				]?.scrollIntoView()
+		})
+	}
+
+	const res = await fetch('/extra/')
+
+	if (res.ok && slot) {
+		try {
+			const html = await res.text()
+
+			if (html) {
+				slot.outerHTML = html
+			}
+		} catch (err) {
+			console.error(err)
+		}
+		slot.remove()
+
+		setupNav()
+		mq.addEventListener("change", setupNav)
+
+		if (hash) {
+			queueMicrotask(() => {
+				const target = document.querySelector(`${hash} a`)
+
+				if (target instanceof HTMLElement) {
+					target.click()
+				}
+			})
+		}
+
+		if (mq.matches) {
+			const sections = document.querySelectorAll('section')
+			const meta = document.querySelector('meta[name="theme-color"]')
+
+			const updateColor = (entries: IntersectionObserverEntry[]) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						const bgColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
+						meta?.setAttribute('content', bgColor)
+
+						document.documentElement.style.setProperty('--bg', bgColor)
+					}
+				})
+			}
+
+			const observer = new IntersectionObserver(updateColor, {threshold: 0.5})
+			sections.forEach(section => observer.observe(section))
+		}
+	}
+</script>
