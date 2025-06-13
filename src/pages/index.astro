@@ -110,7 +110,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 			const updateColor = (entries: IntersectionObserverEntry[]) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						document.body.style.backgroundColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
+						document.documentElement.style.backgroundColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
 					}
 				})
 			}

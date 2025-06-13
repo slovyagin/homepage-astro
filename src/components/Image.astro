@@ -131,6 +131,7 @@ const scaledWidth = Math.floor(width * 0.52)
 			min-height: 100vh;
 			padding-block-end: calc(var(--gap) * 4);
 			padding: calc(var(--gap) * 0.5);
+			transition: 1s background-color ease;
 		}
 
 		section a:link {
@@ -138,8 +139,8 @@ const scaledWidth = Math.floor(width * 0.52)
 		}
 
 		img {
-			max-height: min(calc(100vh - 4 * var(--gap)), calc(100vw - var(--gap)));
-			max-width: calc(100vw - var(--gap));
+			max-height: min(calc(100vh - var(--gap)), calc(100vw - var(--gap)));
+			max-width: min(calc(100vh - var(--gap)), calc(100vw - var(--gap)));
 		}
 	}
 </style>
