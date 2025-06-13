@@ -55,6 +55,10 @@ const scaledWidth = Math.floor(width * 0.52)
 			calc(100vh - var(--gap) * 4),
 			calc(var(--max-size) - var(--gap) * 2)
 		);
+		--reduced-size: min(
+			calc(100vh - var(--gap)),
+			calc(100vw - var(--gap))
+		)
 	}
 
 	@keyframes target {
@@ -125,22 +129,23 @@ const scaledWidth = Math.floor(width * 0.52)
 		user-select: text;
 	}
 
-	@media (width <= 50rem) {
+	@media (width <= 40rem) {
 		section {
 			height: auto;
 			min-height: 100vh;
 			padding-block-end: calc(var(--gap) * 4);
 			padding: calc(var(--gap) * 0.5);
-			transition: 1s background-color ease;
 		}
 
 		section a:link {
 			cursor: pointer;
 		}
+	}
 
+	@media (width <= 40rem)  {
 		img {
-			max-height: min(calc(100vh - var(--gap)), calc(100vw - var(--gap)));
-			max-width: min(calc(100vh - var(--gap)), calc(100vw - var(--gap)));
+			max-height: var(--reduced-size);
+			max-width: var(--reduced-size);
 		}
 	}
 </style>

@@ -82,9 +82,9 @@ const lastImage = images?.[images?.length - 1] ?? {}
 </header>
 <slot/>
 <footer style={`
-      --footer-bg-color: ${lastImage?.backgroundColor};
-      --span: ${count % 2 ? 'span 2 / span 2' : 'auto'};
-    `}/>
+  --footer-bg-color: ${lastImage?.backgroundColor};
+  --span: ${count % 2 ? 'span 2 / span 2' : 'auto'};
+`}/>
 </body>
 </html>
 
@@ -155,24 +155,24 @@ const lastImage = images?.[images?.length - 1] ?? {}
 	}
 
 	footer {
-		min-height: 100vh;
-		max-width: auto;
 		background-color: var(--footer-bg-color);
 		color: var(--slime);
 		display: grid;
 		font-size: clamp(2rem, 2.5cqi, 3rem);
+		grid-column: var(--span);
+		max-width: auto;
+		min-height: 100vh;
 		padding: var(--gap);
 		place-content: center;
 		scroll-snap-align: end;
 		text-align: center;
-		grid-column: var(--span);
 
 		&::before {
 			content: "❦";
 		}
 	}
 
-	@media (width <= 50rem) {
+	@media (width <= 40rem) {
 		header {
 			background-color: transparent;
 			margin-block-end: -8cqh;

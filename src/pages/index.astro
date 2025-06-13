@@ -45,7 +45,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 		max-width: var(--max-size);
 	}
 
-	@media (max-width: 50rem) {
+	@media (width <= 40rem)  {
 		body {
 			grid-template-columns: 1fr;
 		}
@@ -54,7 +54,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 
 <script>
 	const slot = document.getElementById("slot")
-	const mq = window.matchMedia("(width <= 50rem)")
+	const mq = window.matchMedia("(width <= 40rem)")
 	const {hash} = window.location
 
 	const setupNav = () => {
