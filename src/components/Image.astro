@@ -138,7 +138,7 @@ const scaledWidth = Math.floor(width * 0.52)
 		}
 
 		img {
-			max-height: calc(100vw - var(--gap));
+			max-height: min(calc(100vh - 4 * var(--gap)), calc(100vw - var(--gap)));
 			max-width: calc(100vw - var(--gap));
 		}
 	}
