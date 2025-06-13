@@ -1,14 +1,14 @@
 ---
 import ImagesList from "../components/ImagesList.astro"
-import { INITIAL_IMAGES_COUNT, PROFILE } from "../constants"
+import {INITIAL_IMAGES_COUNT, PROFILE} from "../constants"
 import Layout from "../layouts/Layout.astro"
 
-const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
+const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 ---
 
 <Layout title={PROFILE.title}>
 	<Fragment slot="head">
-		{images.map(({ mobileUrl, url, largeUrl }) => (
+		{initialImages.map(({mobileUrl, url, largeUrl}) => (
 			<>
 				<link
 					rel="preload"
@@ -31,8 +31,8 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 			</>
 		))}
 	</Fragment>
-	<ImagesList images={images} />
-	<div id="slot" />
+	<ImagesList images={initialImages}/>
+	<div id="slot"/>
 </Layout>
 
 <style>
@@ -87,8 +87,8 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 			if (html) {
 				slot.outerHTML = html
 			}
-		} catch (err) {
-			console.error(err)
+		} catch (error) {
+			console.error(error)
 		}
 		slot.remove()
 
@@ -107,20 +107,15 @@ const images = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 
 		if (mq.matches) {
 			const sections = document.querySelectorAll('section')
-			const meta = document.querySelector('meta[name="theme-color"]')
-
 			const updateColor = (entries: IntersectionObserverEntry[]) => {
-				entries.forEach(entry => {
+				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						const bgColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
-						meta?.setAttribute('content', bgColor)
-
-						document.documentElement.style.setProperty('--bg', bgColor)
+						document.body.style.backgroundColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
 					}
 				})
 			}
-
 			const observer = new IntersectionObserver(updateColor, {threshold: 0.5})
+
 			sections.forEach(section => observer.observe(section))
 		}
 	}

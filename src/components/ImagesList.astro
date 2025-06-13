@@ -1,5 +1,5 @@
 ---
-import type { Image } from "../types"
+import type {Image} from "../types"
 import ImageComponent from "./Image.astro"
 
 interface Props {
@@ -7,11 +7,11 @@ interface Props {
 	loading?: HTMLImageElement["loading"]
 }
 
-const { images = [], loading = "eager" } = Astro.props
+const {images = [], loading = "eager"} = Astro.props
 ---
 
 <>
-  {images.map((props) => (
-    <ImageComponent {...props} loading={loading} />
-  ))}
+	{images.map((props) => (
+		<ImageComponent {...props} loading={loading}/>
+	))}
 </>

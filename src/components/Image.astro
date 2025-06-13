@@ -1,5 +1,5 @@
 ---
-import type { Image } from "../types"
+import type {Image} from "../types"
 import "../assets/prev.svg"
 import "../assets/next.svg"
 
@@ -19,120 +19,127 @@ const {
 	url,
 	width,
 } = Astro.props
-
 const textColor = color === "black" ? "var(--black)" : "var(--white)"
 const scaledHeight = Math.floor(height * 0.52)
 const scaledWidth = Math.floor(width * 0.52)
 ---
 
 <section
-  id={id}
-  style={`--bg-color: ${backgroundColor}; --text-color: ${textColor};`}
+	id={id}
+	style={`--bg-color: ${backgroundColor}; --text-color: ${textColor};`}
 >
-  <figure>
-    <a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}`: 'Picture anchor'}>
-      <picture>
-        <source srcset={mobileUrl} media="(width <= 25rem)" />
-        <source srcset={url} media="(25rem < width < 40rem)" />
-        <source srcset={largeUrl} media="(width >= 40rem)" />
-        <img
-          alt=""
-          height={scaledHeight}
-          loading={loading}
-          src={mobileUrl}
-          width={scaledWidth}
-        />
-      </picture>
-    </a>
-    {caption ? <figcaption>{caption}</figcaption> : null}
-  </figure>
+	<figure>
+		<a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}` : 'Picture anchor'}>
+			<picture>
+				<source srcset={mobileUrl} media="(width <= 25rem)"/>
+				<source srcset={url} media="(25rem < width < 40rem)"/>
+				<source srcset={largeUrl} media="(width >= 40rem)"/>
+				<img
+					alt=""
+					height={scaledHeight}
+					loading={loading}
+					src={mobileUrl}
+					width={scaledWidth}
+				/>
+			</picture>
+		</a>
+		{caption ?
+			<figcaption>{caption}</figcaption> : null}
+	</figure>
 </section>
 
 <style>
-  :root {
-    --size: min(
-      calc(50vw - var(--gap) * 2),
-      calc(100vh - var(--gap) * 4),
-      calc(var(--max-size) - var(--gap) * 2)
-    );
-  }
+	:root {
+		--size: min(
+			calc(50vw - var(--gap) * 2),
+			calc(100vh - var(--gap) * 4),
+			calc(var(--max-size) - var(--gap) * 2)
+		);
+	}
 
-  @keyframes target {
-    0%, 80% {
-      background-color: var(--slime);
-      color: var(--black);
-    }
-    100% {
-      background-color: var(--bg-color);
-    }
-  }
+	@keyframes target {
+		0%, 80% {
+			background-color: var(--slime);
+			color: var(--black);
+		}
+		100% {
+			background-color: var(--bg-color);
+		}
+	}
 
-  section {
-    align-items: center;
-    background-color: var(--bg-color);
-    display: grid;
-    min-height: min(70vw, 100vh);
-    padding: var(--gap);
-    place-content: center;
-    scroll-snap-align: start;
-    color: var(--text-color);
+	section {
+		align-items: center;
+		background-color: var(--bg-color);
+		color: var(--text-color);
+		display: grid;
+		min-height: min(70vw, 100vh);
+		padding: var(--gap);
+		place-content: center;
+		scroll-snap-align: start;
 
-    &:target {
-        animation: target 3s ease;
-    }
+		&:target {
+			animation: target 3s ease;
+		}
 
-    &:nth-child(odd) a { cursor: url("../assets/prev.svg"), auto; }
-    &:nth-child(even) a { cursor: url("../assets/next.svg"), auto; }
-    &:last-child a { cursor: default; }
-  }
+		&:nth-child(odd) a {
+			cursor: url("../assets/prev.svg"), auto;
+		}
 
-  figure {
-    display: grid;
-    gap: calc(var(--gap) * 0.25);
-    margin: 0 0 calc(-1 * (var(--gap) * 0.25 + var(--md))) 0;
-    width: fit-content;
-  }
+		&:nth-child(even) a {
+			cursor: url("../assets/next.svg"), auto;
+		}
 
-  picture {
-    display: block;
-    margin: 0;
-    width: fit-content;
-  }
+		&:last-child a {
+			cursor: default;
+		}
+	}
 
-  img {
-    background-color: var(--slime);
-    display: block;
-    height: auto;
-    max-height: var(--size);
-    max-width: var(--size);
-    width: auto;
-  }
+	figure {
+		display: grid;
+		gap: calc(var(--gap) * 0.25);
+		margin: 0 0 calc(-1 * (var(--gap) * 0.25 + var(--md))) 0;
+		width: fit-content;
+	}
 
-  figcaption {
-    font-size: var(--md);
-    line-height: 1;
-    margin: 0;
-    opacity: 0.8;
-    padding-inline: calc(var(--gap) * 0.25);
-    text-align: end;
-    user-select: text;
-  }
+	picture {
+		display: block;
+		margin: 0;
+		width: fit-content;
+	}
 
-  @media (width <= 50rem) {
-    section {
-      height: auto;
-      min-height: 100vh;
-      padding: calc(var(--gap) * 0.5);
-      padding-block-end: calc(var(--gap) * 4);
-    }
+	img {
+		background-color: var(--slime);
+		display: block;
+		height: auto;
+		max-height: var(--size);
+		max-width: var(--size);
+		width: auto;
+	}
 
-    section a:link {
-      cursor: pointer;
-    }
+	figcaption {
+		font-size: var(--md);
+		line-height: 1;
+		margin: 0;
+		padding-inline: calc(var(--gap) * 0.25);
+		text-align: end;
+		user-select: text;
+	}
 
-    img {
-      max-width: calc(100vw - var(--gap));
-      max-height: calc(100vw - var(--gap));
-    }
-  }
+	@media (width <= 50rem) {
+		section {
+			height: auto;
+			min-height: 100vh;
+			padding-block-end: calc(var(--gap) * 4);
+			padding: calc(var(--gap) * 0.5);
+		}
+
+		section a:link {
+			cursor: pointer;
+		}
+
+		img {
+			max-height: calc(100vw - var(--gap));
+			max-width: calc(100vw - var(--gap));
+		}
+	}
 </style>

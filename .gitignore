@@ -1,2 +1,5 @@
 .astro/
+.env
+.idea/
 dist/
+node_modules/
