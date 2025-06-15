@@ -1,5 +1,6 @@
 ---
-import {FF_META_PRO_URL, PROFILE} from "../constants"
+import {PROFILE, TYPEFACE} from "../constants"
+import {type Image} from "../types";
 
 interface Props {
 	title: string
@@ -10,7 +11,9 @@ const {images} = Astro.locals
 const count = images?.length ?? 0
 const bg = images?.[0]?.backgroundColor ?? "#fff"
 const color = images?.[0]?.color ?? "#fff"
-const lastImage = images?.[images?.length - 1] ?? {}
+const lastImage: Image | { backgroundColor: string } = images?.[images?.length - 1] ?? {
+	backgroundColor: 'transparent'
+}
 ---
 
 <!doctype html>
@@ -46,7 +49,7 @@ const lastImage = images?.[images?.length - 1] ?? {}
 	<link
 		as="font"
 		crossorigin
-		href={FF_META_PRO_URL}
+		href={TYPEFACE.url}
 		rel="preload"
 		type="font/woff2"
 	/>
@@ -55,15 +58,19 @@ const lastImage = images?.[images?.length - 1] ?? {}
 
 	<style set:html={
 		`
-      @font-face {
-          font-family: FF Meta Web Pro Condensed;
-          src: url(${FF_META_PRO_URL}) format("woff2");
-          font-style: normal;
-          font-display: swap;
-          font-weight: 600;
-          font-stretch: normal;
-          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-        }
+    @font-face {
+        font-family: ${TYPEFACE.name};
+        src: url(${TYPEFACE.url}) format("woff2");
+        font-style: normal;
+        font-display: swap;
+        font-weight: ${TYPEFACE.weight};
+        font-stretch: normal;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+
+      *, ::before, ::after {
+        font-family: ${TYPEFACE.name}, ${TYPEFACE.type};
+      }
       `
 	}/>
 
@@ -90,8 +97,8 @@ const lastImage = images?.[images?.length - 1] ?? {}
 
 <style is:global define:vars={{bg}}>
 	:root {
-		--black: #16161dc0;
-		--white: #fefafcc0;
+		--black: rgba(22, 22, 29, 0.8);
+		--white: rgba(254, 250, 252, 0.8);
 		--slime: #cffc50;
 		--gap: 1rem;
 		--leading: 1.375;
@@ -105,9 +112,6 @@ const lastImage = images?.[images?.length - 1] ?? {}
 	::before,
 	::after {
 		position: relative;
-		font-family: FF Meta Web Pro Condensed,
-		system-ui,
-		sans-serif;
 		box-sizing: border-box;
 		font-kerning: normal;
 		font-variant-numeric: lining-nums;
