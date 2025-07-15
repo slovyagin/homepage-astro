@@ -1,12 +1,12 @@
 ---
 import ImagesList from "../components/ImagesList.astro"
-import {INITIAL_IMAGES_COUNT, PROFILE} from "../constants"
+import {INITIAL_IMAGES_COUNT, profile} from "../constants"
 import Layout from "../layouts/Layout.astro"
 
 const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 ---
 
-<Layout title={PROFILE.title}>
+<Layout title={profile.title}>
 	<Fragment slot="head">
 		{initialImages.map(({mobileUrl, url, largeUrl}) => (
 			<>

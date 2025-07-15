@@ -1,5 +1,5 @@
 ---
-import {PROFILE, TYPEFACE} from "../constants"
+import {profile, typeface} from "../constants"
 import {type Image} from "../types";
 
 interface Props {
@@ -22,34 +22,34 @@ const lastImage: Image | { backgroundColor: string } = images?.[images?.length -
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width"/>
 	<title>{title}</title>
-	<meta name="description" content={PROFILE.description}/>
+	<meta name="description" content={profile.description}/>
 
 	<link rel="icon" href="/favicon.ico" sizes="32x32">
 	<link rel="icon" href="/favicon.png" type="image/png">
 	<link rel="apple-touch-icon" href='/favicon.png'>
 
-	<meta property="og:title" content={PROFILE.title}/>
-	<meta property="og:description" content={PROFILE.description}/>
-	<meta property="og:image" content={PROFILE.image}/>
+	<meta property="og:title" content={profile.title}/>
+	<meta property="og:description" content={profile.description}/>
+	<meta property="og:image" content={profile.image}/>
 	<meta
 		property="og:image:alt"
-		content={[PROFILE.title, PROFILE.description].filter(Boolean).join(", ")}
+		content={[profile.title, profile.description].filter(Boolean).join(", ")}
 	/>
 	<meta property="og:locale" content="en"/>
 	<meta property="og:type" content="website"/>
-	<meta property="og:url" content={PROFILE.url}/>
+	<meta property="og:url" content={profile.url}/>
 
 	<meta name="twitter:card" content="summary_large_image"/>
-	<meta name="twitter:title" content={PROFILE.title}>
-	<meta name="twitter:description" content={PROFILE.description}>
-	<meta name="twitter:image" content={PROFILE.image}>
+	<meta name="twitter:title" content={profile.title}>
+	<meta name="twitter:description" content={profile.description}>
+	<meta name="twitter:image" content={profile.image}>
 
-	<link rel="canonical" href={PROFILE.url}/>
+	<link rel="canonical" href={profile.url}/>
 
 	<link
 		as="font"
 		crossorigin
-		href={TYPEFACE.url}
+		href={typeface.url}
 		rel="preload"
 		type="font/woff2"
 	/>
@@ -59,17 +59,17 @@ const lastImage: Image | { backgroundColor: string } = images?.[images?.length -
 	<style set:html={
 		`
     @font-face {
-        font-family: ${TYPEFACE.name};
-        src: url(${TYPEFACE.url}) format("woff2");
+        font-family: ${typeface.name};
+        src: url(${typeface.url}) format("woff2");
         font-style: normal;
         font-display: swap;
-        font-weight: ${TYPEFACE.weight};
+        font-weight: ${typeface.weight};
         font-stretch: normal;
         unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       }
 
       *, ::before, ::after {
-        font-family: ${TYPEFACE.name}, ${TYPEFACE.type};
+        font-family: ${[typeface.name, typeface.fallback, typeface.type].filter(Boolean).join(", ")};
       }
       `
 	}/>
@@ -79,11 +79,11 @@ const lastImage: Image | { backgroundColor: string } = images?.[images?.length -
 <body>
 <header style={{color: color === 'white' ? 'var(--white)' : 'var(--black)'}}>
 	{
-		PROFILE.title || PROFILE.description
+		profile.title || profile.description
 			?
 			<div>
-				{PROFILE.title ? <h1>{PROFILE.title}</h1> : null}
-				{PROFILE.description ? <p>{PROFILE.description}</p> : null}
+				{profile.title ? <h1>{profile.title}</h1> : null}
+				{profile.description ? <p>{profile.description}</p> : null}
 			</div> : null
 	}
 </header>
@@ -123,7 +123,7 @@ const lastImage: Image | { backgroundColor: string } = images?.[images?.length -
 		color: var(--black);
 		font-size: 1rem;
 		line-height: var(--leading);
-		scroll-snap-type: y mandatory;
+		scroll-snap-type: y mandatory;:
 		user-select: none;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
