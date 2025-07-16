@@ -20,13 +20,13 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 					rel="preload"
 					as="image"
 					href={url}
-					media="(min-width: 25rem) and (max-width: 40rem)"
+					media="(min-width: 25rem) and (max-width: 745px)"
 				/>
 				<link
 					rel="preload"
 					as="image"
 					href={largeUrl}
-					media="(min-width: 40rem)"
+					media="(min-width: 745px)"
 				/>
 			</>
 		))}
@@ -45,7 +45,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 		max-width: var(--max-size);
 	}
 
-	@media (width <= 40rem)  {
+	@media (width <= 744px)  {
 		body {
 			grid-template-columns: 1fr;
 		}
@@ -54,7 +54,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 
 <script>
 	const slot = document.getElementById("slot")
-	const mq = window.matchMedia("(width <= 40rem)")
+	const mq = window.matchMedia("(width <= 744px)")
 	const {hash} = window.location
 
 	const setupNav = () => {

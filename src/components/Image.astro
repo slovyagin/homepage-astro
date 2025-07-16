@@ -32,8 +32,8 @@ const scaledWidth = Math.floor(width * 0.52)
 		<a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}` : 'Picture anchor'}>
 			<picture>
 				<source srcset={mobileUrl} media="(width <= 25rem)"/>
-				<source srcset={url} media="(25rem < width < 40rem)"/>
-				<source srcset={largeUrl} media="(width >= 40rem)"/>
+				<source srcset={url} media="(25rem < width <= 744px)"/>
+				<source srcset={largeUrl} media="(width > 744px)"/>
 				<img
 					alt=""
 					height={scaledHeight}
@@ -137,7 +137,7 @@ const scaledWidth = Math.floor(width * 0.52)
 		user-select: text;
 	}
 
-	@media (width <= 40rem) {
+	@media (width <= 744px) {
 		section {
 			height: auto;
 			min-height: 100vh;
@@ -150,7 +150,7 @@ const scaledWidth = Math.floor(width * 0.52)
 		}
 	}
 
-	@media (width <= 40rem)  {
+	@media (width <= 744px)  {
 		img {
 			max-height: var(--reduced-size);
 			max-width: var(--reduced-size);
