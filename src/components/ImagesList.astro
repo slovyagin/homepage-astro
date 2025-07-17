@@ -11,7 +11,11 @@ const {images = [], loading = "eager"} = Astro.props
 ---
 
 <>
-	{images.map((props) => (
-		<ImageComponent {...props} loading={loading}/>
+	{images.map((props, index) => (
+		<ImageComponent
+			{...props}
+			loading={loading}
+			fetchPriority={index === 0 && loading === "eager" ? "high" : "auto"}
+		/>
 	))}
 </>

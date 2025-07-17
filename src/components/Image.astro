@@ -11,6 +11,7 @@ const {
 	backgroundColor = "transparent",
 	caption,
 	color,
+	fetchPriority,
 	height,
 	id,
 	largeUrl,
@@ -36,6 +37,7 @@ const scaledWidth = Math.floor(width * 0.52)
 				<source srcset={largeUrl} media="(width >= 744px)"/>
 				<img
 					alt=""
+					fetchpriority={fetchPriority}
 					height={scaledHeight}
 					loading={loading}
 					src={mobileUrl}
@@ -49,15 +51,27 @@ const scaledWidth = Math.floor(width * 0.52)
 </section>
 
 <style>
-	:root {
+	@property --scrollbar {
+		syntax: "<length>";
+		inherits: true;
+		initial-value: 0px;
+	}
+
+	html {
+		container-type: inline-size;
+	}
+
+	body {
+		--scrollbar: calc(100vw - 100cqw);
+
 		--size: min(
-			calc(50vw - var(--gap) * 2),
-			calc(100vh - var(--gap) * 4),
-			calc(var(--max-size) - var(--gap) * 2)
+			calc(50vw - var(--gap) * 2 - var(--scrollbar) / 2),
+			calc(100vh - var(--gap) * 4 - var(--scrollbar) / 2),
+			calc(var(--max-size) - var(--gap) * 2 - var(--scrollbar) / 2)
 		);
 		--reduced-size: min(
-			calc(100vh - var(--gap)),
-			calc(100vw - var(--gap))
+			calc(100vh - var(--gap) - var(--scrollbar)),
+			calc(100vw - var(--gap) - var(--scrollbar))
 		)
 	}
 
