@@ -12,7 +12,7 @@ export const MENCKEN = "https://use.typekit.net/af/062057/00000000000000007735b8
 
 export const typeface = {
 	name: 'Mencken',
-	// fallback: 'Arial Narrow',
+	fallback: null, //'Arial Narrow'
 	url: MENCKEN,
 	weight: 400,
 	type: 'serif',
