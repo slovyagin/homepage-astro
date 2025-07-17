@@ -10,8 +10,8 @@ const {title} = Astro.props
 const {images} = Astro.locals
 const count = images?.length ?? 0
 const bg = images?.[0]?.backgroundColor ?? "#fff"
-const color = images?.[0]?.color ?? "white"
-const lastImage: Image | { backgroundColor: string } = images?.[images?.length - 1] ?? {
+const color = images?.[0]?.color ?? "#fff"
+const lastImage: Image | Pick<Image, 'backgroundColor'> = images?.[images?.length - 1] ?? {
 	backgroundColor: 'transparent'
 }
 ---
@@ -97,8 +97,8 @@ const lastImage: Image | { backgroundColor: string } = images?.[images?.length -
 
 <style is:global define:vars={{bg}}>
 	:root {
-		--black: rgba(22, 22, 29, 0.8);
-		--white: rgba(254, 250, 252, 0.8);
+		--black: rgba(22, 22, 29, 0.86);
+		--white: rgba(254, 250, 252, 0.86);
 		--slime: #cffc50;
 
 		--gap: 1rem;
