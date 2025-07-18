@@ -118,5 +118,9 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 
 			sections.forEach(section => observer.observe(section))
 		}
+
+		if (navigator.userAgent.includes('Edg')) {
+			document.querySelectorAll('img').forEach(img => img.setAttribute('inert', ''))
+		}
 	}
 </script>
