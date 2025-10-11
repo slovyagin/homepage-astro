@@ -2,6 +2,7 @@
 import type {Image} from "../types"
 import "../assets/prev.svg"
 import "../assets/next.svg"
+import {ASSETS_URL} from "../constants.ts";
 
 interface Props extends Image {
 	loading: HTMLImageElement["loading"]
@@ -9,18 +10,17 @@ interface Props extends Image {
 }
 
 const {
-	backgroundColor = "transparent",
+	background = "transparent",
 	caption,
 	color,
 	fetchPriority,
 	height,
-	id,
-	largeUrl,
+	key,
 	loading,
-	mobileUrl,
-	url,
 	width,
 } = Astro.props
+const assetId = key.replace(/\.[^/.]+$/, "")
+const id = caption ? `${[caption.toLowerCase().replace(/, | /g, "-"), assetId].join("-")}` : `p-${assetId}`;
 const textColor = color === "black" ? "var(--black)" : "var(--white)"
 const scaledHeight = Math.floor(height * 0.52)
 const scaledWidth = Math.floor(width * 0.52)
@@ -28,20 +28,20 @@ const scaledWidth = Math.floor(width * 0.52)
 
 <section
 	id={id}
-	style={`--bg-color: ${backgroundColor}; --text-color: ${textColor};`}
+	style={`--bg-color: ${background}; --text-color: ${textColor};`}
 >
 	<figure>
 		<a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}` : 'Picture anchor'}>
 			<picture>
-				<source srcset={mobileUrl} media="(width <= 25rem)"/>
-				<source srcset={url} media="(25rem < width < 744px)"/>
-				<source srcset={largeUrl} media="(width >= 744px)"/>
+				<source srcset={`${ASSETS_URL}/${assetId}?s=s`} media="(width <= 25rem)"/>
+				<source srcset={`${ASSETS_URL}/${assetId}?s=m`} media="(25rem < width < 744px)"/>
+				<source srcset={`${ASSETS_URL}/${assetId}?s=l`} media="(width >= 744px)"/>
 				<img
 					alt=""
 					fetchpriority={fetchPriority}
 					height={scaledHeight}
 					loading={loading}
-					src={mobileUrl}
+					src={`${ASSETS_URL}/${assetId}?s=s`}
 					width={scaledWidth}
 				/>
 			</picture>
@@ -103,7 +103,6 @@ const scaledWidth = Math.floor(width * 0.52)
 		}
 
 
-
 		&:target {
 			animation: target 3s ease;
 		}
@@ -163,7 +162,7 @@ const scaledWidth = Math.floor(width * 0.52)
 		}
 	}
 
-	@media (width <= 744px)  {
+	@media (width <= 744px) {
 		img {
 			max-height: var(--reduced-size);
 			max-width: var(--reduced-size);

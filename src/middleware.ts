@@ -1,13 +1,15 @@
 import {defineMiddleware} from "astro:middleware";
 import {shuffle} from "./utils";
+import {IMAGES_API_URL} from "./constants.ts";
 
-const IMAGES_API_URL = import.meta.env.PROD ? "https://build.slovyagin.com" : "https://build.slovyagin.com/dev";
-
-async function fetchImages(page = 1) {
+async function fetchImages(cursor?: string) {
 	const url = new URL(IMAGES_API_URL);
-	url.searchParams.set("page", page.toString());
 
-	const response = await fetch(url, {
+	if (cursor) {
+		url.searchParams.set("cursor", cursor);
+	}
+
+	const response = await fetch(url.toString(), {
 		method: "GET",
 		headers: {
 			"X-API-Key": import.meta.env.API_SECRET_KEY,
@@ -16,48 +18,34 @@ async function fetchImages(page = 1) {
 	});
 
 	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch images: ${response.status} ${response.statusText}`
-		);
+		throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
 	}
 
 	return response.json();
 }
 
 async function fetchAllImages() {
-	const {
-		pagination: {total_pages},
-		images,
-	} = await fetchImages(1);
+	let allImages: any[] = [];
+	let cursor: string | undefined = undefined;
 
-	return (
-		await Promise.all([
-			images,
-			...Array.from(
-				{
-					length: total_pages - 1,
-				},
-				(_, i) => {
-					const images = fetchImages(i + 2).then((page) => page.images);
+	do {
+		const data = await fetchImages(cursor);
+		allImages = allImages.concat(data.images);
+		cursor = data.hasMore ? data.cursor : undefined;
+	} while (cursor);
 
-					return images;
-				}
-			),
-		])
-	).flat();
+	return allImages;
 }
 
-const images = await fetchAllImages();
-const shuffledImages = shuffle(images);
-
 export const onRequest = defineMiddleware(async (context, next) => {
-	if (!context.locals.images) {
-		try {
-			context.locals.images = shuffledImages
-		} catch (error) {
-			console.error("Error fetching images:", error);
-			throw error;
+	try {
+		if (!context.locals.images) {
+			const images = await fetchAllImages();
+			context.locals.images = shuffle(images);
 		}
+	} catch (error) {
+		console.error("Error fetching images:", error);
+		throw error;
 	}
 
 	return next();

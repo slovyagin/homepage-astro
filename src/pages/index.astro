@@ -2,34 +2,39 @@
 import ImagesList from "../components/ImagesList.astro"
 import {INITIAL_IMAGES_COUNT, profile} from "../constants"
 import Layout from "../layouts/Layout.astro"
+import {ASSETS_URL} from "../constants.ts";
 
 const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 ---
 
 <Layout title={profile.title}>
 	<Fragment slot="head">
-		{initialImages.map(({mobileUrl, url, largeUrl}) => (
-			<>
-				<link
-					rel="preload"
-					as="image"
-					href={mobileUrl}
-					media="(max-width: 25rem)"
-				/>
-				<link
-					rel="preload"
-					as="image"
-					href={url}
-					media="(min-width: 25rem) and (max-width: 745px)"
-				/>
-				<link
-					rel="preload"
-					as="image"
-					href={largeUrl}
-					media="(min-width: 745px)"
-				/>
-			</>
-		))}
+		{initialImages.map(({key}) => {
+			const id = key.replace(/\.[^/.]+$/, "")
+
+			return (
+				<>
+					<link
+						rel="preload"
+						as="image"
+						href={`${ASSETS_URL}/${id}?s=s`}
+						media="(max-width: 25rem)"
+					/>
+					<link
+						rel="preload"
+						as="image"
+						href={`${ASSETS_URL}/${id}?s=m`}
+						media="(min-width: 25rem) and (max-width: 745px)"
+					/>
+					<link
+						rel="preload"
+						as="image"
+						href={`${ASSETS_URL}/${id}?s=l`}
+						media="(min-width: 745px)"
+					/>
+				</>
+			);
+		})}
 	</Fragment>
 	<ImagesList images={initialImages}/>
 	<div id="slot"/>
@@ -45,7 +50,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 		max-width: var(--max-size);
 	}
 
-	@media (width <= 744px)  {
+	@media (width <= 744px) {
 		body {
 			grid-template-columns: 1fr;
 		}

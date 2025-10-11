@@ -9,10 +9,10 @@ interface Props {
 const {title} = Astro.props
 const {images} = Astro.locals
 const count = images?.length ?? 0
-const bg = images?.[0]?.backgroundColor ?? "#fff"
+const bg = images?.[0]?.background ?? "#fff"
 const color = images?.[0]?.color ?? "#fff"
-const lastImage: Image | Pick<Image, 'backgroundColor'> = images?.[images?.length - 1] ?? {
-	backgroundColor: 'transparent'
+const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1] ?? {
+	background: 'transparent'
 }
 ---
 
@@ -89,7 +89,7 @@ const lastImage: Image | Pick<Image, 'backgroundColor'> = images?.[images?.lengt
 </header>
 <slot/>
 <footer style={`
-  --footer-bg-color: ${lastImage?.backgroundColor};
+  --footer-bg-color: ${lastImage?.background};
   --span: ${count % 2 ? 'span 2 / span 2' : 'auto'};
 `}/>
 </body>
@@ -116,8 +116,8 @@ const lastImage: Image | Pick<Image, 'backgroundColor'> = images?.[images?.lengt
 		position: relative;
 		box-sizing: border-box;
 		font-kerning: normal;
-		//font-variant-numeric: lining-nums;
-		//font-feature-settings: "lnum";
+		/*font-variant-numeric: lining-nums;*/
+		/*font-feature-settings: "lnum";*/
 	}
 
 	html {
