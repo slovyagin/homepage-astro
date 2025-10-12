@@ -2,6 +2,22 @@ import {defineMiddleware} from "astro:middleware";
 import {shuffle} from "./utils";
 import {IMAGES_API_URL} from "./constants.ts";
 
+const images = await fetchAllImages(import.meta.env.API_SECRET_KEY);
+const shuffledImages = shuffle(images);
+
+export const onRequest = defineMiddleware(async (c, next) => {
+	try {
+		if (!c.locals.images) {
+			c.locals.images = shuffledImages;
+		}
+	} catch (error) {
+		console.error("Error fetching images:", error);
+		throw error;
+	}
+
+	return next();
+});
+
 async function fetchImages(secretKey: string, cursor?: string) {
 	const url = new URL(IMAGES_API_URL);
 
@@ -36,18 +52,3 @@ async function fetchAllImages(secretKey: string) {
 
 	return allImages;
 }
-
-export const onRequest = defineMiddleware(async (context, next) => {
-	try {
-		if (!context.locals.images) {
-			const images = await fetchAllImages(import.meta.env.API_SECRET_KEY);
-
-			context.locals.images = shuffle(images);
-		}
-	} catch (error) {
-		console.error("Error fetching images:", error);
-		throw error;
-	}
-
-	return next();
-});
