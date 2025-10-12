@@ -22,18 +22,18 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width"/>
 	<title>{title}</title>
-	<meta name="description" content={profile.description}/>
+	<meta name="description" content={profile.sanitizedDescription}/>
 
 	<link rel="icon" href="/favicon.ico" sizes="32x32">
 	<link rel="icon" href="/favicon.png" type="image/png">
 	<link rel="apple-touch-icon" href='/favicon.png'>
 
 	<meta property="og:title" content={profile.title}/>
-	<meta property="og:description" content={profile.description}/>
+	<meta property="og:description" content={profile.sanitizedDescription}/>
 	<meta property="og:image" content={profile.image}/>
 	<meta
 		property="og:image:alt"
-		content={[profile.title, profile.description].filter(Boolean).join(", ")}
+		content={[profile.title, profile.sanitizedDescription].filter(Boolean).join(", ")}
 	/>
 	<meta property="og:locale" content="en"/>
 	<meta property="og:type" content="website"/>
@@ -41,7 +41,7 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 
 	<meta name="twitter:card" content="summary_large_image"/>
 	<meta name="twitter:title" content={profile.title}>
-	<meta name="twitter:description" content={profile.description}>
+	<meta name="twitter:description" content={profile.sanitizedDescription}>
 	<meta name="twitter:image" content={profile.image}>
 
 	<link rel="canonical" href={profile.url}/>

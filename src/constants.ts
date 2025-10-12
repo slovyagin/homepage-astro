@@ -3,6 +3,7 @@ import socialImage from "./assets/slovyagin.jpg";
 
 export const profile = {
 	description: `Selected Pictures: 2015\u200a–\u200a${getCurrentYear()}`,
+	sanitizedDescription: `Selected Pictures: 2015–${getCurrentYear()}`,
 	image: socialImage.src,
 	title: "Bogdan Slovyagin",
 	url: "https://www.slovyagin.com/",
