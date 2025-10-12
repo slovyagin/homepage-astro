@@ -1,10 +1,9 @@
-/// <reference path="../.astro/types.d.ts" />
-/// <reference types="astro/client" />
+type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
 
 declare namespace App {
 	import type {Image} from "./types";
 
-	interface Locals {
+	interface Locals extends Runtime {
 		images: Array<Image>;
 	}
 }
