@@ -1,35 +1,32 @@
 ---
 import ImagesList from "../components/ImagesList.astro"
-import {INITIAL_IMAGES_COUNT, profile} from "../constants"
+import {INITIAL_IMAGES_COUNT, profile, ASSETS_URL} from "../constants"
 import Layout from "../layouts/Layout.astro"
-import {ASSETS_URL} from "../constants.ts";
 
 const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 ---
 
 <Layout title={profile.title}>
 	<Fragment slot="head">
-		{initialImages.map(({key}) => {
-			const id = key.replace(/\.[^/.]+$/, "")
-
+		{initialImages.map(({url}) => {
 			return (
 				<>
 					<link
 						rel="preload"
 						as="image"
-						href={`${ASSETS_URL}/${id}?s=s`}
+						href={`${ASSETS_URL}${url}?s=s`}
 						media="(max-width: 25rem)"
 					/>
 					<link
 						rel="preload"
 						as="image"
-						href={`${ASSETS_URL}/${id}?s=m`}
-						media="(min-width: 25rem) and (max-width: 745px)"
+						href={`${ASSETS_URL}${url}?s=m`}
+						media="(min-width: 25rem) and (max-width: 744px)"
 					/>
 					<link
 						rel="preload"
 						as="image"
-						href={`${ASSETS_URL}/${id}?s=l`}
+						href={`${ASSETS_URL}${url}?s=l`}
 						media="(min-width: 745px)"
 					/>
 				</>
@@ -62,27 +59,6 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 	const mq = window.matchMedia("(width <= 744px)")
 	const {hash} = window.location
 
-	const setupNav = () => {
-		document.addEventListener('click', (e) => {
-			const target = e.target as HTMLElement
-			const link = target.closest('a')
-
-			if (!link?.closest('section') || mq.matches) {
-				return
-			}
-
-			const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('section a'))
-
-			const index = links.indexOf(link)
-			const prev = !!(index % 2)
-
-			e.preventDefault()
-			link.closest('section')?.[
-				prev ? 'previousElementSibling' : 'nextElementSibling'
-				]?.scrollIntoView()
-		})
-	}
-
 	const res = await fetch('/extra/')
 
 	if (res.ok && slot) {
@@ -97,8 +73,24 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 		}
 		slot.remove()
 
-		setupNav()
-		mq.addEventListener("change", setupNav)
+		document.addEventListener('click', (e) => {
+			const target = e.target as HTMLElement
+			const link = target.closest('a')
+
+			if (!link || !link.closest('section') || mq.matches) {
+				return
+			}
+
+			const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('section a'))
+
+			const index = links.indexOf(link)
+			const prev = !!(index % 2)
+
+			e.preventDefault()
+			link.closest('section')?.[
+				prev ? 'previousElementSibling' : 'nextElementSibling'
+				]?.scrollIntoView()
+		})
 
 		if (hash) {
 			queueMicrotask(() => {

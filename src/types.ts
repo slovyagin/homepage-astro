@@ -4,5 +4,6 @@ export interface Image {
 	color: "black" | "white";
 	height: number;
 	key: string;
+	url: string;
 	width: number;
 }

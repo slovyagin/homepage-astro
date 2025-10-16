@@ -2,7 +2,7 @@
 import type {Image} from "../types"
 import "../assets/prev.svg"
 import "../assets/next.svg"
-import {ASSETS_URL} from "../constants.ts";
+import {ASSETS_URL} from "../constants.ts"
 
 interface Props extends Image {
 	loading: HTMLImageElement["loading"]
@@ -17,10 +17,11 @@ const {
 	height,
 	key,
 	loading,
+	url,
 	width,
 } = Astro.props
 const assetId = key.replace(/\.[^/.]+$/, "")
-const id = caption ? `${[caption.toLowerCase().replace(/, | /g, "-"), assetId].join("-")}` : `p-${assetId}`;
+const id = caption ? `${[caption.toLowerCase().replace(/, | /g, "-"), assetId.slice(4, 8)].join("-")}` : `p-${assetId}`;
 const textColor = color === "black" ? "var(--black)" : "var(--white)"
 const scaledHeight = Math.floor(height * 0.52)
 const scaledWidth = Math.floor(width * 0.52)
@@ -33,15 +34,15 @@ const scaledWidth = Math.floor(width * 0.52)
 	<figure>
 		<a href={`#${id}`} aria-label={caption ? `Anchor for ${caption}` : 'Picture anchor'}>
 			<picture>
-				<source srcset={`${ASSETS_URL}/${assetId}?s=s`} media="(width <= 25rem)"/>
-				<source srcset={`${ASSETS_URL}/${assetId}?s=m`} media="(25rem < width < 744px)"/>
-				<source srcset={`${ASSETS_URL}/${assetId}?s=l`} media="(width >= 744px)"/>
+				<source srcset={`${ASSETS_URL}${url}?s=s`} media="(width <= 25rem)"/>
+				<source srcset={`${ASSETS_URL}${url}?s=m`} media="(25rem < width < 744px)"/>
+				<source srcset={`${ASSETS_URL}${url}?s=l`} media="(width >= 744px)"/>
 				<img
 					alt=""
 					fetchpriority={fetchPriority}
 					height={scaledHeight}
 					loading={loading}
-					src={`${ASSETS_URL}/${assetId}?s=s`}
+					src={`${ASSETS_URL}${url}?s=s`}
 					width={scaledWidth}
 				/>
 			</picture>
