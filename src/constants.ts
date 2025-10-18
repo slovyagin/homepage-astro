@@ -3,10 +3,10 @@ import socialImage from "./assets/slovyagin.jpg";
 
 export const profile = {
 	description: `Selected Pictures: 2015\u200a–\u200a${getCurrentYear()}`,
-	sanitizedDescription: `Selected Pictures: 2015–${getCurrentYear()}`,
 	image: socialImage.src,
+	sanitizedDescription: `Selected Pictures: 2015–${getCurrentYear()}`,
 	title: "Bogdan Slovyagin",
-	url: "https://www.slovyagin.com/",
+	url: "https://slovyagin.com/",
 } as const;
 export const INITIAL_IMAGES_COUNT = 3;
 export const ADOBE_TYPEKIT_URL = "https://use.typekit.net/knh7hwy.css"
