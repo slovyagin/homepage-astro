@@ -11,7 +11,6 @@ export const onRequest = defineMiddleware(async (c, next) => {
 		c.locals.images = shuffledImages;
 	}
 
-
 	return next();
 });
 
@@ -37,16 +36,35 @@ async function fetchImages(secretKey: string, cursor?: string) {
 	return response.json();
 }
 
-async function fetchAllImages(secretKey: string) {
-	let allImages: Image[] = [];
-	let cursor: string | undefined = undefined;
+async function fetchAllImages(secretKey: string): Promise<Image[]> {
+	if (!secretKey) {
+		console.error("API_SECRET_KEY is missing. Please set it in your .env file.");
+		return [];
+	}
 
-	do {
-		const data = await fetchImages(secretKey, cursor);
+	try {
+		let allImages: Image[] = [];
+		let cursor: string | undefined = undefined;
 
-		allImages = allImages.concat(data.images);
-		cursor = data.hasMore ? data.cursor : undefined;
-	} while (cursor);
+		do {
+			const data = await fetchImages(secretKey, cursor);
 
-	return allImages;
+			if (!data || !Array.isArray(data.images)) {
+				console.error("Invalid API response:", data);
+				return allImages;
+			}
+
+			allImages = allImages.concat(data.images);
+			cursor = data.hasMore ? data.cursor : undefined;
+		} while (cursor);
+
+		if (allImages.length === 0) {
+			console.warn("API returned 0 images");
+		}
+
+		return allImages;
+	} catch (error) {
+		console.error("Failed to fetch images:", error);
+		return [];
+	}
 }

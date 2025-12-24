@@ -15,19 +15,19 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 						rel="preload"
 						as="image"
 						href={`${ASSETS_URL}${url}?s=s`}
-						media="(max-width: 25rem)"
+						media="(width <= 25rem)"
 					/>
 					<link
 						rel="preload"
 						as="image"
 						href={`${ASSETS_URL}${url}?s=m`}
-						media="(min-width: 25rem) and (max-width: 744px)"
+						media="(25rem < width < 744px)"
 					/>
 					<link
 						rel="preload"
 						as="image"
 						href={`${ASSETS_URL}${url}?s=l`}
-						media="(min-width: 745px)"
+						media="(width >= 744px)"
 					/>
 				</>
 			);

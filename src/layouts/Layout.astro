@@ -1,6 +1,6 @@
 ---
 import {profile, typeface} from "../constants"
-import {type Image} from "../types";
+import type {Image} from "../types";
 import {ADOBE_TYPEKIT_URL} from "../constants.ts";
 
 interface Props {
@@ -21,13 +21,15 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 <html lang="en" data-count={count} >
 <head>
 	<meta charset="UTF-8"/>
-	<meta name="viewport" content="width=device-width"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>{title}</title>
 	<meta name="description" content={profile.sanitizedDescription}/>
 
 	<link rel="icon" href="/favicon.ico" sizes="32x32">
 	<link rel="icon" href="/favicon.png" type="image/png">
 	<link rel="apple-touch-icon" href='/favicon.png'>
+
+	<meta name="view-transition" content="same-origin">
 
 	<meta property="og:title" content={profile.title}/>
 	<meta property="og:description" content={profile.sanitizedDescription}/>
@@ -47,6 +49,10 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 
 	<link rel="canonical" href={profile.url}/>
 
+	<link rel="preconnect" href="https://assets.slovyagin.com" crossorigin />
+	<link rel="preconnect" href="https://p.typekit.net" crossorigin />
+	<link rel="preconnect" href="https://use.typekit.net" crossorigin />
+	<link rel="preload"  href={ADOBE_TYPEKIT_URL} as="style">
 	<link rel="stylesheet" href={ADOBE_TYPEKIT_URL}>
 	<style set:html={
 		`
@@ -55,16 +61,18 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 				src: local('Times New Roman');
 			}
 
-      html {
-        font-family: ${[typeface.name, typeface.fallback, typeface.type].filter(Boolean).join(", ")};
-      }
-   `
+			html {
+				font-family: ${[typeface.name, typeface.fallback, typeface.type].filter(Boolean).join(", ")};
+			}
+			`
 	}/>
+
+	<script type="speculationrules">
+		{"prefetch": [{"source": "list", "urls": ["/extra/"]}]}
+	</script>
 
 	<slot name="head"/>
 
-	<link rel="preconnect" href="https://use.typekit.net" crossorigin />
-	<link rel="preload"  href={ADOBE_TYPEKIT_URL} as="style">
 	<link rel="prefetch" href="/extra/" as="document"/>
 </head>
 <body>
@@ -78,10 +86,12 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 			</div> : null
 	}
 </header>
+
 <slot/>
+
 <footer style={`
-  --footer-bg-color: ${lastImage?.background};
-  --span: ${count % 2 ? 'span 2 / span 2' : 'auto'};
+	--footer-bg-color: ${lastImage?.background};
+	--span: ${count % 2 ? 'span 2 / span 2' : 'auto'};
 `}/>
 </body>
 </html>
@@ -156,7 +166,7 @@ const lastImage: Image | Pick<Image, 'background'> = images?.[images?.length - 1
 		display: grid;
 		font-size: clamp(2rem, 2.5cqi, 3rem);
 		grid-column: var(--span);
-		max-width: auto;
+		max-width: none;
 		min-height: 100vh;
 		padding: var(--gap);
 		place-content: center;
