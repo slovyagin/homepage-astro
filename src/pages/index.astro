@@ -55,69 +55,81 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 </style>
 
 <script>
-	const slot = document.getElementById("slot")
-	const mq = window.matchMedia("(width <= 744px)")
-	const {hash} = window.location
+	const idle = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1))
 
-	const res = await fetch('/extra/')
+	idle(async () => {
+		const slot = document.getElementById("slot")
+		const mq = window.matchMedia("(width <= 744px)")
+		const {hash} = window.location
 
-	if (res.ok && slot) {
-		try {
-			const html = await res.text()
+		const res = await fetch('/extra/')
 
-			if (html) {
-				slot.outerHTML = html
-			}
-		} catch (error) {
-			console.error(error)
-		}
-		slot.remove()
+		if (res.ok && res.body && slot) {
+			try {
+				const reader = res.body.getReader()
+				const decoder = new TextDecoder()
+				let html = ''
 
-		document.addEventListener('click', (e) => {
-			const target = e.target as HTMLElement
-			const link = target.closest('a')
-
-			if (!link || !link.closest('section') || mq.matches) {
-				return
-			}
-
-			const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('section a'))
-
-			const index = links.indexOf(link)
-			const prev = !!(index % 2)
-
-			e.preventDefault()
-			link.closest('section')?.[
-				prev ? 'previousElementSibling' : 'nextElementSibling'
-				]?.scrollIntoView()
-		})
-
-		if (hash) {
-			queueMicrotask(() => {
-				const target = document.querySelector(`${hash} a`)
-
-				if (target instanceof HTMLElement) {
-					target.click()
+				while (true) {
+					const {done, value} = await reader.read()
+					if (done) break
+					html += decoder.decode(value, {stream: true})
 				}
-			})
-		}
 
-		if (mq.matches) {
-			const sections = document.querySelectorAll('section')
-			const updateColor = (entries: IntersectionObserverEntry[]) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						document.documentElement.style.backgroundColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
+				if (html) {
+					slot.outerHTML = html
+				}
+			} catch (error) {
+				console.error(error)
+			}
+			slot.remove()
+
+			document.addEventListener('click', (e) => {
+				const target = e.target as HTMLElement
+				const link = target.closest('a')
+
+				if (!link || !link.closest('section') || mq.matches) {
+					return
+				}
+
+				const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('section a'))
+
+				const index = links.indexOf(link)
+				const prev = !!(index % 2)
+
+				e.preventDefault()
+				link.closest('section')?.[
+					prev ? 'previousElementSibling' : 'nextElementSibling'
+					]?.scrollIntoView()
+			})
+
+			if (hash) {
+				queueMicrotask(() => {
+					const target = document.querySelector(`${hash} a`)
+
+					if (target instanceof HTMLElement) {
+						target.click()
 					}
 				})
 			}
-			const observer = new IntersectionObserver(updateColor, {threshold: 0.5})
 
-			sections.forEach(section => observer.observe(section))
-		}
+			if (mq.matches) {
+				const sections = document.querySelectorAll('section')
+				const updateColor = (entries: IntersectionObserverEntry[]) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							document.documentElement.style.backgroundColor = (entry.target as HTMLElement).style.getPropertyValue('--bg-color')
+						}
+					})
+				}
+				const observer = new IntersectionObserver(updateColor, {threshold: 0.5})
 
-		if (navigator.userAgent.includes('Edg')) {
-			document.querySelectorAll('img').forEach(img => img.setAttribute('inert', ''))
+				sections.forEach(section => observer.observe(section))
+			}
+
+			if (navigator.userAgent.includes('Edg')) {
+				document.querySelectorAll('img').forEach(img => img.setAttribute('inert', ''))
+			}
 		}
-	}
+	})
 </script>

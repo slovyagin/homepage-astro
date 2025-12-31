@@ -3,4 +3,10 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+
+/
+  Link: <https://use.typekit.net/knh7hwy.css>; rel=preload; as=style
+  Link: <https://assets.slovyagin.com>; rel=preconnect
+  Link: <https://p.typekit.net>; rel=preconnect
+  Link: <https://use.typekit.net>; rel=preconnect
