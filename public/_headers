@@ -4,7 +4,7 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'self'; img-src 'self' https://assets.slovyagin.com; style-src 'self' 'unsafe-inline' https://use.typekit.net; font-src https://use.typekit.net
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; connect-src 'self' https://cloudflareinsights.com; img-src 'self' https://assets.slovyagin.com data:; style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net; font-src https://use.typekit.net
 
 /
   Link: <https://use.typekit.net/knh7hwy.css>; rel=preload; as=style
