@@ -34,7 +34,7 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 		})}
 	</Fragment>
 	<ImagesList images={initialImages}/>
-	<div id="slot"/>
+	<div id="outlet"/>
 </Layout>
 
 <style>
@@ -58,13 +58,13 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 	const idle = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1))
 
 	idle(async () => {
-		const slot = document.getElementById("slot")
+		const outlet = document.getElementById("outlet")
 		const mq = window.matchMedia("(width <= 744px)")
 		const {hash} = window.location
 
 		const res = await fetch('/extra/')
 
-		if (res.ok && res.body && slot) {
+		if (res.ok && res.body && outlet) {
 			try {
 				const reader = res.body.getReader()
 				const decoder = new TextDecoder()
@@ -77,12 +77,12 @@ const initialImages = Astro.locals.images.slice(0, INITIAL_IMAGES_COUNT)
 				}
 
 				if (html) {
-					slot.outerHTML = html
+					outlet.outerHTML = html
 				}
 			} catch (error) {
 				console.error(error)
 			}
-			slot.remove()
+			outlet.remove()
 
 			document.addEventListener('click', (e) => {
 				const target = e.target as HTMLElement
